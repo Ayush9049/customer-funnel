@@ -49,6 +49,7 @@ class EventService:
             anonymous_id=payload.anonymous_id,
             event_name=payload.event_name,
             properties=payload.properties or {},
+            created_at=payload.timestamp,
         )
 
         self.db.add(event)

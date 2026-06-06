@@ -1,6 +1,9 @@
 import type { AnalyticsOverview, EventListResponse, FunnelResponse } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://customer-funnel-production.up.railway.app';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ??
+  import.meta.env.VITE_API_URL ??
+  (import.meta.env.DEV ? 'http://localhost:8000' : 'https://customer-funnel-production.up.railway.app');
 const API_KEY = import.meta.env.VITE_ANALYTICS_API_KEY ?? import.meta.env.VITE_API_KEY ?? 'demo-key';
 
 async function request<T>(path: string): Promise<T> {

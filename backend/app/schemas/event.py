@@ -16,6 +16,10 @@ class EventTrackRequest(BaseModel):
 
     event_name: str
 
+    timestamp: datetime = Field(
+        description="Client event timestamp in ISO 8601 UTC format"
+    )
+
     properties: dict[str, Any] = Field(default_factory=dict)
     @field_validator("event_name")
     @classmethod

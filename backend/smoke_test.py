@@ -1,4 +1,6 @@
 import json
+from datetime import datetime, timezone
+
 import urllib.request
 import urllib.error
 
@@ -44,6 +46,7 @@ if __name__ == '__main__':
         'user_id': 'smoke-user',
         'anonymous_id': 'smoke-anon',
         'event_name': 'product_view',
+        'timestamp': datetime.now(timezone.utc).isoformat(),
         'properties': {'product_id': 'SMOKE-001'},
     }
 

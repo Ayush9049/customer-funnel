@@ -1,4 +1,6 @@
-from sqlalchemy import DateTime, Integer, String, func, JSON, ForeignKey
+from datetime import datetime
+
+from sqlalchemy import DateTime, Integer, String, JSON, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -24,8 +26,7 @@ class Event(Base):
     
     properties: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
 
-    created_at: Mapped[object] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        server_default=func.now(),
         nullable=False
     )

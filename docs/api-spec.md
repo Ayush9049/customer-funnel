@@ -13,6 +13,7 @@ Request body:
   "user_id": "123",
   "anonymous_id": "anon-abc-001",
   "event_name": "login",
+  "timestamp": "2026-06-06T13:19:01.774Z",
   "properties": {}
 }
 ```
