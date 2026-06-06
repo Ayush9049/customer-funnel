@@ -1,4 +1,5 @@
 import type { EventItem } from '../types';
+import { formatToIST } from '../utils/format';
 
 interface EventTableProps {
   events: EventItem[];
@@ -94,7 +95,7 @@ export default function EventTable({
                       {JSON.stringify(event.properties)}
                     </pre>
                   </td>
-                  <td className="px-4 py-4 text-slate-400">{new Date(event.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
+                  <td className="px-4 py-4 text-slate-400">{formatToIST(event.created_at)}</td>
                 </tr>
               ))
             )}

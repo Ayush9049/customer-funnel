@@ -26,6 +26,7 @@ class EventService:
         return user
 
     def track_event(self, payload: EventTrackRequest) -> Event:
+        print('EVENT RECEIVED', payload.model_dump())
 
         project = (
             self.db.query(Project)
@@ -53,6 +54,8 @@ class EventService:
         self.db.add(event)
         self.db.commit()
         self.db.refresh(event)
+
+        print('EVENT STORED', {'id': event.id, 'event_name': event.event_name, 'project_id': event.project_id})
 
         return event
 

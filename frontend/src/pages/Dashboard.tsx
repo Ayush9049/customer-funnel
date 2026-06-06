@@ -20,6 +20,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     let cancelled = false;
+    let intervalId: number | null = null;
 
     async function loadData() {
       setLoading(true);
@@ -51,8 +52,15 @@ export default function Dashboard() {
 
     loadData();
 
+    intervalId = window.setInterval(() => {
+      void loadData();
+    }, 15000);
+
     return () => {
       cancelled = true;
+      if (intervalId !== null) {
+        window.clearInterval(intervalId);
+      }
     };
   }, [eventName, page, pageSize, userId]);
 

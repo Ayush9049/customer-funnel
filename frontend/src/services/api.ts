@@ -1,6 +1,7 @@
 import type { AnalyticsOverview, EventListResponse, FunnelResponse } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://customer-funnel-production.up.railway.app';
+const API_KEY = import.meta.env.VITE_ANALYTICS_API_KEY ?? import.meta.env.VITE_API_KEY ?? 'demo-key';
 
 async function request<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`);
@@ -43,17 +44,48 @@ export async function trackEvent(payload: {
   event_name: string;
   properties?: Record<string, unknown>;
 }) {
-  const response = await fetch(`${API_BASE_URL}/api/events/track`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Tracking failed with status ${response.status}`);
+  if (typeof window === 'undefined') {
+    throw new Error('trackEvent can only run in the browser');
   }
 
-  return response.json();
- }
+  if (!API_KEY) {
+    throw new Error('Missing analytics API key. Set VITE_ANALYTICS_API_KEY or VITE_API_KEY.');
+  }
+
+  const storedAnonymousId = window.localStorage.getItem('analytics_anonymous_id');
+  const anonymousId = payload.anonymous_id ?? storedAnonymousId ?? `anon-${crypto.randomUUID()}`;
+
+  if (!storedAnonymousId) {
+    window.localStorage.setItem('analytics_anonymous_id', anonymousId);
+  }
+
+  const eventName = payload.event_name.trim();
+  console.log('Tracking event:', eventName);
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/events/track`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        api_key: API_KEY,
+        user_id: payload.user_id ?? null,
+        anonymous_id: anonymousId,
+        event_name: eventName,
+        properties: payload.properties ?? {},
+      }),
+    });
+
+    console.log('Tracking response status:', response.status);
+
+    if (!response.ok) {
+      throw new Error(`Tracking failed with status ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Tracking event failed:', error);
+    throw error;
+  }
+}

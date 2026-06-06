@@ -13,10 +13,14 @@ def post(url, payload):
             body = resp.read().decode('utf-8')
             print('POST', url, 'status=', resp.status)
             print(body)
+            return resp.status, body
     except urllib.error.HTTPError as e:
-        print('POST HTTPError', e.code, e.read().decode('utf-8'))
+        body = e.read().decode('utf-8')
+        print('POST HTTPError', e.code, body)
+        return e.code, body
     except Exception as e:
         print('POST Error', e)
+        return None, None
 
 
 def get(url):
@@ -32,12 +36,19 @@ def get(url):
 
 
 if __name__ == '__main__':
+    status, body = post(f"{BASE}/api/projects", {'name': 'Smoke Test Project'})
+    project = json.loads(body) if status and body else {}
+
     event = {
+        'api_key': project.get('api_key', ''),
         'user_id': 'smoke-user',
         'anonymous_id': 'smoke-anon',
         'event_name': 'product_view',
         'properties': {'product_id': 'SMOKE-001'},
     }
+
+    if not event['api_key']:
+        raise RuntimeError('Smoke test could not read an API key from /api/projects')
 
     post(f"{BASE}/api/events/track", event)
     print('\n--- Funnel ---')

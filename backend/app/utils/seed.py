@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import SessionLocal
 from app.models.event import Event
+from app.models.project import Project
 from app.models.user import User
 
 
@@ -23,8 +24,16 @@ SAMPLE_EVENTS = [
     {"anonymous_id": "anon-abc-001", "event_name": "product_view", "properties": {"product_id": "P003"}},
 ]
 
+DEMO_PROJECT_API_KEY = "demo-key"
+
 
 def seed_demo_data(db: Session) -> None:
+    project = db.query(Project).filter(Project.api_key == DEMO_PROJECT_API_KEY).one_or_none()
+    if project is None:
+        project = Project(name="Demo Store", api_key=DEMO_PROJECT_API_KEY)
+        db.add(project)
+        db.flush()
+
     for external_user_id in SAMPLE_USERS:
         existing = db.query(User).filter(User.external_user_id == external_user_id).one_or_none()
         if existing is None:
@@ -35,7 +44,7 @@ def seed_demo_data(db: Session) -> None:
     existing_events = db.query(Event).count()
     if existing_events == 0:
         for item in SAMPLE_EVENTS:
-            db.add(Event(**item))
+            db.add(Event(project_id=project.id, **item))
 
     db.commit()
 
