@@ -36,3 +36,6 @@ def on_startup() -> None:
 def health():
     return {"status": "ok"}
 
+@app.get("/test")
+def test():
+    return {"ok": True}
