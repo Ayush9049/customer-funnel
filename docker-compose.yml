@@ -2,6 +2,7 @@ services:
   db:
     image: postgres:16-alpine
     environment:
+      TZ: "Asia/Kolkata"
       POSTGRES_DB: analytics_platform
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -19,6 +20,7 @@ services:
     build:
       context: ./backend
     environment:
+      TZ: "Asia/Kolkata"
       DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/analytics_platform
       CORS_ORIGINS: http://localhost:5173
       AUTO_CREATE_TABLES: "true"
