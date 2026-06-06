@@ -3,9 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.analytics import router as analytics_router
 from app.api.events import router as events_router
+from app.api.projects import router as projects_router
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.models import event, user, project
+from app.api.projects import router as projects_router
 
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
@@ -20,6 +22,8 @@ app.add_middleware(
 
 app.include_router(events_router)
 app.include_router(analytics_router)
+app.include_router(projects_router)
+
 
 
 @app.api_route("/", methods=["GET", "HEAD"])
