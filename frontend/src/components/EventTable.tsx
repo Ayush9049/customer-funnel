@@ -1,4 +1,4 @@
-gimport type { EventItem } from '../types';
+import type { EventItem } from '../types';
 
 interface EventTableProps {
   events: EventItem[];
