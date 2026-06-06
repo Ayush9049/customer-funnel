@@ -5,7 +5,7 @@ from app.api.analytics import router as analytics_router
 from app.api.events import router as events_router
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.models import event, user  # noqa: F401
+from app.models import event, user, project
 
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
