@@ -21,12 +21,16 @@ app.include_router(events_router)
 app.include_router(analytics_router)
 
 
+@app.get("/")
+def root() -> dict[str, str]:
+    return {"status": "ok"}
+
+
 @app.on_event("startup")
 def on_startup() -> None:
     if settings.auto_create_tables:
         Base.metadata.create_all(bind=engine)
 
-
-@app.get("/health")
-def health_check() -> dict[str, str]:
-    return {"status": "ok"}
+ @app.get("/health")
+def health():
+     return {"status": "ok"}
