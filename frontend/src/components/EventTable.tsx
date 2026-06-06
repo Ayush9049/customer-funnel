@@ -1,4 +1,4 @@
-import type { EventItem } from '../types';
+gimport type { EventItem } from '../types';
 
 interface EventTableProps {
   events: EventItem[];
@@ -94,7 +94,7 @@ export default function EventTable({
                       {JSON.stringify(event.properties)}
                     </pre>
                   </td>
-                  <td className="px-4 py-4 text-slate-400">{new Date(event.created_at).toLocaleString()}</td>
+                  <td className="px-4 py-4 text-slate-400">{new Date(event.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
                 </tr>
               ))
             )}
