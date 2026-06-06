@@ -7,7 +7,18 @@ from app.core.config import settings
 from app.core.database import Base, engine
 from app.models import event, user  # noqa: F401
 
+
 app = FastAPI(title=settings.app_name, version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://your-frontend.vercel.app"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.add_middleware(
     CORSMiddleware,
