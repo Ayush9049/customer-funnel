@@ -29,10 +29,7 @@ class FunnelService:
             self.db.query(func.count(distinct(func.coalesce(Event.user_id, Event.anonymous_id)))).scalar() or 0
         )
         recent_events = (
-            self.db.query(Event)
-            .order_by(Event.created_at.desc())
-            .limit(5)
-            .all()
+            self.db.query(Event).order_by(Event.created_at.desc()).limit(5).all()
         )
         return {
             "total_events": int(total_events),
