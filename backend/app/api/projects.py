@@ -34,3 +34,18 @@ def create_project(
         "api_key": new_project.api_key,
         "created_at": new_project.created_at
     }
+@router.get("")
+def get_projects(
+    db: Session = Depends(get_db)
+):
+    projects = db.query(Project).all()
+
+    return [
+        {
+            "id": project.id,
+            "name": project.name,
+            "api_key": project.api_key,
+            "created_at": project.created_at
+        }
+        for project in projects
+    ]
