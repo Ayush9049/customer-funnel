@@ -80,39 +80,39 @@ export default function Dashboard() {
   }, [eventName, page, pageSize, userId]);
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA] text-slate-900">
+    <main className="min-h-screen bg-[#FAFAFA]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <nav className="mb-8 rounded-[8px] border border-[#E5E7EB] bg-white px-5 py-4 shadow-soft">
+        <nav className="mb-8 rounded-lg border border-[#E5E7EB] bg-white px-5 py-4 shadow-subtle">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#18181B] text-sm font-semibold text-white">AF</div>
-              <span className="text-sm font-semibold text-[#18181B]">Analytics</span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] text-sm font-bold text-white">AF</div>
+              <span className="text-sm font-bold text-[#1a1a1a]">Analytics</span>
             </div>
-            <div className="flex flex-wrap items-center gap-5 text-sm font-medium text-slate-600">
+            <div className="flex flex-wrap items-center gap-5 text-sm font-medium text-[#6B7280]">
               {navItems.map((item) => (
-                <a key={item} href="#" className="transition hover:text-slate-900">
+                <a key={item} href="#" className="transition hover:text-[#1a1a1a]">
                   {item}
                 </a>
               ))}
             </div>
-            <div className="inline-flex items-center rounded-full border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-slate-700">
+            <div className="inline-flex items-center rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-medium">
               Last 30 days
             </div>
           </div>
         </nav>
 
-        <section className="mb-8 rounded-[8px] border border-[#E5E7EB] bg-white px-6 py-6 shadow-soft">
+        <section className="mb-8 rounded-lg border border-[#E5E7EB] bg-white px-6 py-6 shadow-subtle">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-2xl">
-              <h1 className="text-2xl font-semibold tracking-tight text-[#18181B]">Funnel analytics for client-side product journeys.</h1>
-              <p className="mt-3 text-sm leading-6 text-slate-600">
+              <h1 className="text-3xl font-bold tracking-tight text-[#1a1a1a]">Funnel analytics for client-side product journeys.</h1>
+              <p className="mt-3 text-sm leading-6 text-[#6B7280]">
                 Track login-to-purchase behavior, inspect individual events, and surface a concise dashboard for the
                 product funnel.
               </p>
             </div>
             <div className="flex flex-col gap-2">
-              <span className="text-[11px] uppercase tracking-[0.24em] text-[#6B7280]">Backend endpoint</span>
-              <span className="inline-flex rounded-full border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-slate-700">
+              <span className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Backend endpoint</span>
+              <span className="inline-flex rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-medium">
                 http://localhost:8000
               </span>
             </div>
@@ -120,13 +120,13 @@ export default function Dashboard() {
         </section>
 
         {error ? (
-          <div className="mb-6 rounded-[8px] border border-[#FCA5A5] bg-[#FEE2E2] px-4 py-3 text-sm text-[#991B1B]">
+          <div className="mb-6 rounded-lg border border-[#FCA5A5] bg-[#FEE2E2] px-4 py-3 text-sm text-[#991B1B] font-medium">
             {error}
           </div>
         ) : null}
 
         {loading ? (
-          <div className="rounded-[8px] border border-[#E5E7EB] bg-white px-6 py-10 text-center text-slate-600 shadow-soft">
+          <div className="rounded-lg border border-[#E5E7EB] bg-white px-6 py-10 text-center text-[#6B7280] shadow-subtle font-medium">
             Loading analytics dashboard...
           </div>
         ) : (
@@ -134,11 +134,11 @@ export default function Dashboard() {
             <StatsCards overview={overview} />
             <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
               <FunnelChart data={funnel} />
-              <div className="rounded-[8px] border border-[#E5E7EB] bg-white p-6 shadow-soft">
+              <div className="rounded-lg border border-[#E5E7EB] bg-white p-6 shadow-subtle">
                 <div className="flex flex-col gap-3">
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.24em] text-[#6B7280]">Live Feed</p>
-                    <h2 className="mt-1 text-[22px] font-semibold text-[#18181B]">Live Feed</h2>
+                    <p className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Live Feed</p>
+                    <h2 className="mt-1 text-xl font-bold text-[#1a1a1a]">Recent Activity</h2>
                   </div>
                   <div className="divide-y divide-[#E5E7EB]">
                     {(overview?.recent_events ?? []).map((event) => {
@@ -147,12 +147,12 @@ export default function Dashboard() {
                         <div key={event.id} className={`flex items-center gap-3 border-l-4 ${style} py-4 pl-4`}>
                           <span className={`inline-flex h-2.5 w-2.5 rounded-full ${style}`} />
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-[#18181B]">{event.event_name}</p>
-                            <p className="mt-1 text-sm text-slate-500 truncate">
+                            <p className="text-sm font-bold text-[#1a1a1a]">{event.event_name}</p>
+                            <p className="mt-1 text-sm text-[#9CA3AF] truncate">
                               {event.user_id ?? event.anonymous_id ?? 'Anonymous user'}
                             </p>
                           </div>
-                          <p className="ml-auto text-xs text-slate-500">{formatToIST(event.created_at)}</p>
+                          <p className="ml-auto text-xs text-[#9CA3AF]">{formatToIST(event.created_at)}</p>
                         </div>
                       );
                     })}

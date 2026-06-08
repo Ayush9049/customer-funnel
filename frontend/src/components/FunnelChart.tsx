@@ -21,13 +21,13 @@ export default function FunnelChart({ data }: FunnelChartProps) {
   const maxValue = Math.max(...values.map((stage) => stage.value), 1);
 
   return (
-    <div className="rounded-[8px] border border-[#E5E7EB] bg-white p-6 shadow-soft">
+    <div className="rounded-lg border border-[#E5E7EB] bg-white p-6 shadow-subtle">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.24em] text-[#6B7280]">Funnel</p>
-          <h2 className="mt-1 text-2xl font-semibold text-[#18181B]">Conversion journey</h2>
+          <p className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Funnel</p>
+          <h2 className="mt-1 text-2xl font-bold text-[#1a1a1a]">Conversion Journey</h2>
         </div>
-        <p className="text-sm text-slate-500">Live event counts across the primary funnel</p>
+        <p className="text-sm text-[#9CA3AF]">Live event counts across the primary funnel</p>
       </div>
 
       <div className="space-y-5">
@@ -38,15 +38,15 @@ export default function FunnelChart({ data }: FunnelChartProps) {
 
           return (
             <div key={stage.key} className="space-y-3">
-              <div className="flex items-center justify-between text-sm font-medium text-[#18181B]">
+              <div className="flex items-center justify-between text-sm font-semibold text-[#1a1a1a]">
                 <span>{stage.label}</span>
-                <span className="text-sm font-normal text-slate-500">
+                <span className="text-sm font-medium text-[#9CA3AF]">
                   {stage.value.toLocaleString()} · {conversion}%
                 </span>
               </div>
               <div className="h-3 overflow-hidden rounded-full bg-[#F3F4F6]">
                 <div
-                  className="h-full rounded-full bg-[#2563EB]"
+                  className="h-full rounded-full bg-[#1a1a1a]"
                   style={{ width: `${width}%`, opacity: stage.opacity }}
                 />
               </div>
