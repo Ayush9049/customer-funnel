@@ -1,7 +1,13 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+
+def _format_datetime_for_json(value: datetime) -> str:
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 class EventTrackRequest(BaseModel):
@@ -31,7 +37,10 @@ class EventTrackRequest(BaseModel):
 
 
 class EventRead(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_encoders={datetime: _format_datetime_for_json},
+    )
 
     id: int
     user_id: str | None
