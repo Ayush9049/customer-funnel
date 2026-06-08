@@ -1,5 +1,6 @@
 export const formatToIST = (dateInput: string | number | Date) => {
   const d = new Date(dateInput);
+
   return d.toLocaleString('en-IN', {
     timeZone: 'Asia/Kolkata',
     year: 'numeric',
@@ -11,9 +12,8 @@ export const formatToIST = (dateInput: string | number | Date) => {
   });
 };
 
-export const formatEventName = (eventName: string): string => {
+export const formatEventName = (eventName: string) => {
   return eventName
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-};
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+ };
