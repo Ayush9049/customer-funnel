@@ -85,8 +85,8 @@ export default function Dashboard() {
         <nav className="mb-8 rounded-lg border border-[#E5E7EB] bg-white px-5 py-4 shadow-subtle">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] text-sm font-bold text-white">AF</div>
-              <span className="text-sm font-bold text-[#1a1a1a]">Analytics</span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] text-sm font-bold text-white">S</div>
+              <span className="text-sm font-bold text-[#1a1a1a]">Shoption Analytics</span>
             </div>
             <div className="flex flex-wrap items-center gap-5 text-sm font-medium text-[#6B7280]">
               {navItems.map((item) => (

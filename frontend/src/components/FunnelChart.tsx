@@ -5,11 +5,11 @@ interface FunnelChartProps {
 }
 
 const stages = [
-  { key: 'login', label: 'Login', opacity: 1.0 },
-  { key: 'product_view', label: 'Product View', opacity: 0.8 },
-  { key: 'add_to_cart', label: 'Add to Cart', opacity: 0.6 },
-  { key: 'checkout_started', label: 'Checkout Started', opacity: 0.4 },
-  { key: 'purchase', label: 'Purchase', opacity: 0.2 },
+  { key: 'login', label: 'Login' },
+  { key: 'product_view', label: 'Product View' },
+  { key: 'add_to_cart', label: 'Add to Cart' },
+  { key: 'checkout_started', label: 'Checkout Started' },
+  { key: 'purchase', label: 'Purchase' },
 ];
 
 export default function FunnelChart({ data }: FunnelChartProps) {
@@ -34,7 +34,7 @@ export default function FunnelChart({ data }: FunnelChartProps) {
         {values.map((stage, index) => {
           const previousValue = index === 0 ? stage.value : values[index - 1].value;
           const conversion = previousValue > 0 ? Math.round((stage.value / previousValue) * 100) : 0;
-          const width = Math.max((stage.value / maxValue) * 100, 4);
+          const width = stage.value > 0 ? Math.max((stage.value / maxValue) * 100, 2) : 0;
 
           return (
             <div key={stage.key} className="space-y-3">
@@ -44,10 +44,10 @@ export default function FunnelChart({ data }: FunnelChartProps) {
                   {stage.value.toLocaleString()} · {conversion}%
                 </span>
               </div>
-              <div className="h-3 overflow-hidden rounded-full bg-[#F3F4F6]">
+              <div className="h-3 overflow-hidden rounded-full border border-[#D1D5DB] bg-[#F9FAFB]">
                 <div
-                  className="h-full rounded-full bg-[#1a1a1a]"
-                  style={{ width: `${width}%`, opacity: stage.opacity }}
+                  className="h-full rounded-full bg-[#D1D5DB] transition-all duration-300"
+                  style={{ width: `${width}%` }}
                 />
               </div>
             </div>
