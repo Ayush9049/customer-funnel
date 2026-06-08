@@ -138,21 +138,19 @@ export default function Dashboard() {
                 <div className="flex flex-col gap-3">
                   <div>
                     <p className="text-[11px] uppercase tracking-[0.24em] text-[#6B7280]">Live Feed</p>
-                    <h2 className="mt-1 text-2xl font-semibold text-[#18181B]">Live Feed</h2>
+                    <h2 className="mt-1 text-[22px] font-semibold text-[#18181B]">Live Feed</h2>
                   </div>
-                  <div className="space-y-4">
+                  <div className="divide-y divide-[#E5E7EB]">
                     {(overview?.recent_events ?? []).map((event) => {
                       const style = getEventStyle(event.event_name);
                       return (
-                        <div key={event.id} className={`flex items-center gap-3 border-l-4 ${style} border-[#E5E7EB] pb-4 pt-4 sm:pb-5 sm:pt-5`}>
-                          <div className="flex items-center gap-3">
-                            <span className={`inline-flex h-2.5 w-2.5 rounded-full ${style}`} />
-                            <div>
-                              <p className="text-sm font-semibold text-[#18181B]">{event.event_name}</p>
-                              <p className="mt-1 text-sm text-slate-500">
-                                {event.user_id ?? event.anonymous_id ?? 'Anonymous user'}
-                              </p>
-                            </div>
+                        <div key={event.id} className={`flex items-center gap-3 border-l-4 ${style} py-4 pl-4`}>
+                          <span className={`inline-flex h-2.5 w-2.5 rounded-full ${style}`} />
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-[#18181B]">{event.event_name}</p>
+                            <p className="mt-1 text-sm text-slate-500 truncate">
+                              {event.user_id ?? event.anonymous_id ?? 'Anonymous user'}
+                            </p>
                           </div>
                           <p className="ml-auto text-xs text-slate-500">{formatToIST(event.created_at)}</p>
                         </div>
