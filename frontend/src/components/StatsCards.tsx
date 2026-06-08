@@ -20,7 +20,7 @@ export default function StatsCards({ overview }: StatsCardsProps) {
             <p className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">{item.label}</p>
             <p className="mt-4 text-3xl font-bold text-[#1a1a1a]">{value.toLocaleString()}</p>
             <p className="mt-3 inline-flex rounded-lg border border-[#E5E7EB] bg-[#F0F9FF] px-3 py-1 text-[11px] font-semibold text-[#16A34A]">
-              {item.change} vs last week
+              {item.change} 
             </p>
           </div>
         );
