@@ -1,5 +1,5 @@
 import type { EventItem } from '../types';
-import { formatToIST } from '../utils/format';
+import { formatToIST, formatEventName } from '../utils/format';
 
 interface EventTableProps {
   events: EventItem[];
@@ -58,7 +58,7 @@ export default function EventTable({
               <option value="">All Events</option>
               {filterOptions.map((option) => (
                 <option key={option} value={option}>
-                  {option}
+                  {formatEventName(option)}
                 </option>
               ))}
             </select>
@@ -87,7 +87,7 @@ export default function EventTable({
             ) : (
               events.map((event) => (
                 <tr key={event.id} className="border-b border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors">
-                  <td className="px-4 py-4 text-sm font-bold text-[#1a1a1a]">{event.event_name}</td>
+                  <td className="px-4 py-4 text-sm font-bold text-[#1a1a1a]">{formatEventName(event.event_name)}</td>
                   <td className="px-4 py-4 text-sm text-[#6B7280]">{event.user_id ?? '—'}</td>
                   <td className="px-4 py-4 text-sm text-[#6B7280]">{event.anonymous_id ?? '—'}</td>
                   <td className="px-4 py-4 text-sm text-[#6B7280]">

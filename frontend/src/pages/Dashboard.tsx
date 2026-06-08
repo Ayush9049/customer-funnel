@@ -4,7 +4,7 @@ import type { AnalyticsOverview, EventItem, FunnelResponse } from '../types';
 import EventTable from '../components/EventTable';
 import FunnelChart from '../components/FunnelChart';
 import StatsCards from '../components/StatsCards';
-import { formatToIST } from '../utils/format';
+import { formatToIST, formatEventName } from '../utils/format';
 
 const navItems = ['Dashboard', 'Events', 'Funnels', 'Settings'];
 
@@ -152,7 +152,7 @@ export default function Dashboard() {
                         <div key={event.id} className={`flex items-center gap-3 border-l-4 ${style} py-4 pl-4`}>
                           <span className={`inline-flex h-2.5 w-2.5 rounded-full ${style}`} />
                           <div className="min-w-0">
-                            <p className="text-sm font-bold text-[#1a1a1a]">{event.event_name}</p>
+                            <p className="text-sm font-bold text-[#1a1a1a]">{formatEventName(event.event_name)}</p>
                             <p className="mt-1 text-sm text-[#9CA3AF] truncate">
                               {event.user_id ?? event.anonymous_id ?? 'Anonymous user'}
                             </p>
