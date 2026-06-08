@@ -29,31 +29,31 @@ export default function EventTable({
   onPageChange,
 }: EventTableProps) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-slate-950/70 p-6 shadow-glow backdrop-blur">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div className="rounded-[8px] border border-[#E5E7EB] bg-white p-6 shadow-soft">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm uppercase tracking-[0.24em] text-cyan-200/80">Event viewer</p>
-          <h2 className="mt-1 text-2xl font-semibold text-white">Recent tracked events</h2>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-[#6B7280]">Event viewer</p>
+          <h2 className="mt-1 text-2xl font-semibold text-[#18181B]">Recent tracked events</h2>
+          <p className="mt-2 text-sm text-slate-500">
             Showing {events.length} of {total.toLocaleString()} events
           </p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
-          <label className="flex flex-col gap-2 text-sm text-slate-300">
-            User ID
+        <div className="grid gap-4 sm:grid-cols-2 xl:w-[420px]">
+          <label className="flex flex-col gap-2 text-sm text-slate-700">
+            <span>User ID</span>
             <input
               value={userId}
               onChange={(event) => onUserIdChange(event.target.value)}
               placeholder="user-1001"
-              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-cyan-300/60"
+              className="rounded-[8px] border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-3 text-slate-900 outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]/20"
             />
           </label>
-          <label className="flex flex-col gap-2 text-sm text-slate-300">
-            Event name
+          <label className="flex flex-col gap-2 text-sm text-slate-700">
+            <span>Event name</span>
             <select
               value={eventName}
               onChange={(event) => onEventNameChange(event.target.value)}
-              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-cyan-300/60"
+              className="rounded-[8px] border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-3 text-slate-900 outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]/20"
             >
               <option value="">All events</option>
               {filterOptions.map((option) => (
@@ -66,10 +66,10 @@ export default function EventTable({
         </div>
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
-        <table className="min-w-full divide-y divide-white/10 text-left">
-          <thead className="bg-white/5 text-sm uppercase tracking-[0.18em] text-slate-400">
-            <tr>
+      <div className="mt-6 overflow-hidden rounded-[8px] border border-[#E5E7EB]">
+        <table className="min-w-full text-left">
+          <thead>
+            <tr className="text-[11px] uppercase tracking-[0.24em] text-[#6B7280]">
               <th className="px-4 py-3">Event</th>
               <th className="px-4 py-3">User</th>
               <th className="px-4 py-3">Anonymous</th>
@@ -77,25 +77,28 @@ export default function EventTable({
               <th className="px-4 py-3">Created</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/10 bg-slate-950/30 text-sm text-slate-200">
+          <tbody>
             {events.length === 0 ? (
               <tr>
-                <td className="px-4 py-6 text-slate-400" colSpan={5}>
+                <td className="px-4 py-6 text-slate-500" colSpan={5}>
                   No events match the current filters.
                 </td>
               </tr>
             ) : (
               events.map((event) => (
-                <tr key={event.id} className="hover:bg-white/5">
-                  <td className="px-4 py-4 font-medium text-white">{event.event_name}</td>
-                  <td className="px-4 py-4 text-slate-300">{event.user_id ?? '—'}</td>
-                  <td className="px-4 py-4 text-slate-300">{event.anonymous_id ?? '—'}</td>
-                  <td className="px-4 py-4 text-slate-300">
-                    <pre className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap rounded-xl bg-white/5 px-3 py-2 text-xs text-slate-200">
+                <tr key={event.id} className="border-b border-[#E5E7EB] hover:bg-slate-50">
+                  <td className="px-4 py-4 text-sm font-medium text-[#18181B]">{event.event_name}</td>
+                  <td className="px-4 py-4 text-sm text-slate-600">{event.user_id ?? '—'}</td>
+                  <td className="px-4 py-4 text-sm text-slate-600">{event.anonymous_id ?? '—'}</td>
+                  <td className="px-4 py-4 text-sm text-slate-600">
+                    <code
+                      title={JSON.stringify(event.properties)}
+                      className="max-w-[220px] truncate rounded-full border border-[#E5E7EB] bg-[#F8FAFC] px-2 py-1 text-[11px] text-[#18181B]"
+                    >
                       {JSON.stringify(event.properties)}
-                    </pre>
+                    </code>
                   </td>
-                  <td className="px-4 py-4 text-slate-400">{formatToIST(event.created_at)}</td>
+                  <td className="px-4 py-4 text-sm text-slate-500">{formatToIST(event.created_at)}</td>
                 </tr>
               ))
             )}
@@ -103,22 +106,22 @@ export default function EventTable({
         </table>
       </div>
 
-      <div className="mt-5 flex flex-col gap-3 text-sm text-slate-300 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-5 flex flex-col gap-3 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
         <p>
           Page {page} of {Math.max(totalPages, 1)} · {pageSize} rows per page
         </p>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <button
             onClick={() => onPageChange(Math.max(1, page - 1))}
             disabled={page <= 1}
-            className="rounded-full border border-white/10 px-4 py-2 text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded px-3 py-2 text-sm font-medium text-[#18181B] transition hover:text-slate-700 disabled:cursor-not-allowed disabled:text-slate-400"
           >
             Previous
           </button>
           <button
             onClick={() => onPageChange(Math.min(totalPages, page + 1))}
             disabled={page >= totalPages}
-            className="rounded-full border border-white/10 px-4 py-2 text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded px-3 py-2 text-sm font-medium text-[#18181B] transition hover:text-slate-700 disabled:cursor-not-allowed disabled:text-slate-400"
           >
             Next
           </button>

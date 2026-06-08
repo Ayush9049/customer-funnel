@@ -3,6 +3,9 @@ export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         midnight: '#081120',
         ink: '#111827',
@@ -13,6 +16,7 @@ export default {
       },
       boxShadow: {
         glow: '0 24px 80px rgba(14, 165, 233, 0.18)',
+        soft: '0 1px 3px rgba(0, 0, 0, 0.08)',
       },
     },
   },
