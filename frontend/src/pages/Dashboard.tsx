@@ -90,8 +90,13 @@ export default function Dashboard() {
             </div>
             <div className="flex flex-wrap items-center gap-5 text-sm font-medium text-[#6B7280]">
               {navItems.map((item) => (
-                <a key={item} href="#" className="transition hover:text-[#1a1a1a]">
-                  {item}
+                <a key={item} href="#" className="transition hover:text-[#1a1a1a] flex items-center gap-2">
+                  <span>{item}</span>
+                  {item === 'Events' && total > 0 && (
+                    <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 rounded-full bg-[#1a1a1a] text-white text-xs font-bold">
+                      {total}
+                    </span>
+                  )}
                 </a>
               ))}
             </div>

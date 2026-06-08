@@ -41,15 +41,17 @@ export default function FunnelChart({ data }: FunnelChartProps) {
               <div className="flex items-center justify-between text-sm font-semibold text-[#1a1a1a]">
                 <span>{stage.label}</span>
                 <span className="text-sm font-medium text-[#9CA3AF]">
-                  {stage.value.toLocaleString()} · {conversion}%
+                  {stage.value > 0 ? `${stage.value.toLocaleString()} · ${conversion}%` : ''}
                 </span>
               </div>
-              <div className="h-3 overflow-hidden rounded-full border border-[#D1D5DB] bg-[#F9FAFB]">
-                <div
-                  className="h-full rounded-full bg-[#D1D5DB] transition-all duration-300"
-                  style={{ width: `${width}%` }}
-                />
-              </div>
+              {stage.value > 0 && (
+                <div className="h-3 overflow-hidden rounded-full border border-[#D1D5DB] bg-[#F9FAFB]">
+                  <div
+                    className="h-full rounded-full bg-[#D1D5DB] transition-all duration-300"
+                    style={{ width: `${width}%` }}
+                  />
+                </div>
+              )}
             </div>
           );
         })}
