@@ -4,6 +4,7 @@ import type { AnalyticsOverview, EventItem, FunnelResponse } from '../types';
 import EventTable from '../components/EventTable';
 import FunnelChart from '../components/FunnelChart';
 import StatsCards from '../components/StatsCards';
+import { formatToIST } from '../utils/format';
 
 export default function Dashboard() {
   const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
@@ -108,13 +109,13 @@ export default function Dashboard() {
                     <div key={event.id} className="rounded-2xl border border-white/10 bg-white/5 p-4">
                       <div className="flex items-center justify-between gap-4">
                         <p className="font-medium text-white">{event.event_name}</p>
-                        <p className="text-xs text-slate-400">{new Date(event.created_at).toLocaleString()}</p>
+                        <p className="text-xs text-slate-400">{formatToIST(event.created_at)}</p>
                       </div>
                       <p className="mt-2 text-sm text-slate-300">
                         {event.user_id ? `User ${event.user_id}` : `Anonymous ${event.anonymous_id ?? 'visitor'}`}
                       </p>
                     </div>
-                  ))}
+                  ))} 
                 </div>
               </div>
             </div>

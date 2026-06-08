@@ -43,6 +43,13 @@ class EventService:
         if payload.user_id:
             self._ensure_user_record(payload.user_id)
 
+        print(
+            "TRACKED EVENT:",
+            payload.user_id,
+            payload.event_name,
+            payload.timestamp,
+        )
+
         event = Event(
             project_id=project.id,
             user_id=payload.user_id,
