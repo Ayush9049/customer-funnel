@@ -1,13 +1,9 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict
 
-
-def _format_datetime_for_json(value: datetime) -> str:
-    if value.tzinfo is None:
-        value = value.replace(tzinfo=timezone.utc)
-    return value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+from app.schemas.event import _format_datetime_for_json
 
 
 class FunnelResponse(BaseModel):
@@ -18,11 +14,25 @@ class FunnelResponse(BaseModel):
     purchase: int
 
 
+class RecentEvent(BaseModel):
+    model_config = ConfigDict(
+        json_encoders={datetime: _format_datetime_for_json}
+    )
+
+    id: int
+    user_id: str | None
+    anonymous_id: str | None
+    event_name: str
+    created_at: datetime
+
+
 class AnalyticsOverview(BaseModel):
-    model_config = ConfigDict(json_encoders={datetime: _format_datetime_for_json})
+    model_config = ConfigDict(
+        json_encoders={datetime: _format_datetime_for_json}
+    )
 
     total_events: int
     unique_users: int
     purchases: int
     funnel: dict[str, int]
-    recent_events: list[dict[str, Any]] = []
+    recent_events: list[RecentEvent] = []
