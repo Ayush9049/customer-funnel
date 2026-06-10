@@ -54,6 +54,7 @@ class FunnelService:
                     "anonymous_id": event.anonymous_id,
                     "event_name": event.event_name,
                     "created_at": event.created_at,
+                    "properties": event.properties,
                 }
                 for event in recent_events
             ],

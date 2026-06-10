@@ -24,6 +24,7 @@ class RecentEvent(BaseModel):
     anonymous_id: str | None
     event_name: str
     created_at: datetime
+    properties: dict = {}
 
 
 class AnalyticsOverview(BaseModel):
