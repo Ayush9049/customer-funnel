@@ -51,6 +51,8 @@ export default function Dashboard() {
   }, []);
 
   const activeProjectId = selectedProject?.id || 2;
+  console.log("ACTIVE PROJECT ID:", activeProjectId);
+  console.log("SELECTED PROJECT:", selectedProject);
 
   useEffect(() => {
     let cancelled = false;

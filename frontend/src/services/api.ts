@@ -1,15 +1,39 @@
-import type { AnalyticsOverview, EventListResponse, FunnelResponse, Project } from '../types';
+import type {
+  AnalyticsOverview,
+  EventListResponse,
+  FunnelResponse,
+  Project,
+} from "../types";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ??
   import.meta.env.VITE_API_URL ??
-  (import.meta.env.DEV ? 'http://localhost:8000' : 'https://customer-funnel-production.up.railway.app');
-const API_KEY = import.meta.env.VITE_ANALYTICS_API_KEY ?? import.meta.env.VITE_API_KEY ?? 'demo-key';
+  (import.meta.env.DEV
+    ? "http://localhost:8000"
+    : "https://customer-funnel-production.up.railway.app");
+
+const API_KEY =
+  import.meta.env.VITE_ANALYTICS_API_KEY ??
+  import.meta.env.VITE_API_KEY ??
+  "demo-key";
 
 async function request<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`);
+  const fullUrl = `${API_BASE_URL}${path}`;
+
+  console.log("================================");
+  console.log("API REQUEST:", fullUrl);
+  console.log("================================");
+
+  const response = await fetch(fullUrl);
 
   if (!response.ok) {
+    console.error(
+      "API ERROR:",
+      response.status,
+      response.statusText,
+      fullUrl
+    );
+
     throw new Error(`Request failed with status ${response.status}`);
   }
 
@@ -17,15 +41,34 @@ async function request<T>(path: string): Promise<T> {
 }
 
 export async function getProjects(): Promise<Project[]> {
-  return request('/api/projects');
+  console.log("LOADING PROJECTS");
+  return request("/api/projects");
 }
 
-export async function getOverview(projectId: number): Promise<AnalyticsOverview> {
-  return request(`/api/analytics/overview?project_id=${projectId}`);
+export async function getOverview(
+  projectId: number
+): Promise<AnalyticsOverview> {
+  const url = `/api/analytics/overview?project_id=${projectId}`;
+
+  console.log("================================");
+  console.log("OVERVIEW PROJECT ID:", projectId);
+  console.log("OVERVIEW URL:", `${API_BASE_URL}${url}`);
+  console.log("================================");
+
+  return request(url);
 }
 
-export async function getFunnel(projectId: number): Promise<FunnelResponse> {
-  return request(`/api/analytics/funnel?project_id=${projectId}`);
+export async function getFunnel(
+  projectId: number
+): Promise<FunnelResponse> {
+  const url = `/api/analytics/funnel?project_id=${projectId}`;
+
+  console.log("================================");
+  console.log("FUNNEL PROJECT ID:", projectId);
+  console.log("FUNNEL URL:", `${API_BASE_URL}${url}`);
+  console.log("================================");
+
+  return request(url);
 }
 
 export async function getEvents(params: {
@@ -37,14 +80,26 @@ export async function getEvents(params: {
 }): Promise<EventListResponse> {
   const search = new URLSearchParams();
 
-  search.set('project_id', String(params.projectId));
-  search.set('page', String(params.page ?? 1));
-  search.set('page_size', String(params.pageSize ?? 10));
+  search.set("project_id", String(params.projectId));
+  search.set("page", String(params.page ?? 1));
+  search.set("page_size", String(params.pageSize ?? 10));
 
-  if (params.userId) search.set('user_id', params.userId);
-  if (params.eventName) search.set('event_name', params.eventName);
+  if (params.userId) {
+    search.set("user_id", params.userId);
+  }
 
-  return request(`/api/events?${search.toString()}`);
+  if (params.eventName) {
+    search.set("event_name", params.eventName);
+  }
+
+  const url = `/api/events?${search.toString()}`;
+
+  console.log("================================");
+  console.log("EVENTS PROJECT ID:", params.projectId);
+  console.log("EVENTS URL:", `${API_BASE_URL}${url}`);
+  console.log("================================");
+
+  return request(url);
 }
 
 export async function trackEvent(payload: {
@@ -53,48 +108,67 @@ export async function trackEvent(payload: {
   event_name: string;
   properties?: Record<string, unknown>;
 }) {
-  if (typeof window === 'undefined') {
-    throw new Error('trackEvent can only run in the browser');
+  if (typeof window === "undefined") {
+    throw new Error("trackEvent can only run in the browser");
   }
 
   if (!API_KEY) {
-    throw new Error('Missing analytics API key. Set VITE_ANALYTICS_API_KEY or VITE_API_KEY.');
+    throw new Error(
+      "Missing analytics API key. Set VITE_ANALYTICS_API_KEY or VITE_API_KEY."
+    );
   }
 
-  const storedAnonymousId = window.localStorage.getItem('analytics_anonymous_id');
-  const anonymousId = payload.anonymous_id ?? storedAnonymousId ?? `anon-${crypto.randomUUID()}`;
+  const storedAnonymousId =
+    window.localStorage.getItem("analytics_anonymous_id");
+
+  const anonymousId =
+    payload.anonymous_id ??
+    storedAnonymousId ??
+    `anon-${crypto.randomUUID()}`;
 
   if (!storedAnonymousId) {
-    window.localStorage.setItem('analytics_anonymous_id', anonymousId);
+    window.localStorage.setItem(
+      "analytics_anonymous_id",
+      anonymousId
+    );
   }
 
   const eventName = payload.event_name.trim();
-  console.log('Tracking event:', eventName);
+
+  console.log("TRACKING EVENT:", eventName);
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/events/track`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        api_key: API_KEY,
-        user_id: payload.user_id ?? null,
-        anonymous_id: anonymousId,
-        event_name: eventName,
-        properties: payload.properties ?? {},
-      }),
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/events/track`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          api_key: API_KEY,
+          user_id: payload.user_id ?? null,
+          anonymous_id: anonymousId,
+          event_name: eventName,
+          properties: payload.properties ?? {},
+        }),
+      }
+    );
 
-    console.log('Tracking response status:', response.status);
+    console.log(
+      "TRACKING RESPONSE STATUS:",
+      response.status
+    );
 
     if (!response.ok) {
-      throw new Error(`Tracking failed with status ${response.status}`);
+      throw new Error(
+        `Tracking failed with status ${response.status}`
+      );
     }
 
     return response.json();
   } catch (error) {
-    console.error('Tracking event failed:', error);
+    console.error("TRACKING EVENT FAILED:", error);
     throw error;
   }
 }
