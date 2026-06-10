@@ -85,13 +85,14 @@ class EventService:
 
     def list_events(
         self,
+        project_id: int,
         page: int = 1,
         page_size: int = 20,
         user_id: str | None = None,
         event_name: str | None = None,
     ) -> EventListResponse:
 
-        query = self.db.query(Event)
+        query = self.db.query(Event).filter(Event.project_id == project_id)
 
         if user_id:
             query = query.filter(Event.user_id == user_id)

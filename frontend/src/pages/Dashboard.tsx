@@ -153,9 +153,16 @@ export default function Dashboard() {
                           <span className={`inline-flex h-2.5 w-2.5 rounded-full ${style}`} />
                           <div className="min-w-0">
                             <p className="text-sm font-bold text-[#1a1a1a]">{formatEventName(event.event_name)}</p>
-                            <p className="mt-1 text-sm text-[#9CA3AF] truncate">
-                              {event.user_id ?? event.anonymous_id ?? 'Anonymous user'}
-                            </p>
+                            <div className="customer-info mt-1">
+                              <div className="customer-name text-sm text-[#1a1a1a] font-medium truncate">
+                                {event.properties?.customer_name || event.properties?.customer_email || event.user_id || event.anonymous_id || 'Anonymous user'}
+                              </div>
+                              {event.user_id && (
+                                <div className="customer-phone text-xs text-[#9CA3AF] mt-0.5">
+                                  {event.user_id}
+                                </div>
+                              )}
+                            </div>
                           </div>
                           <p className="ml-auto text-xs text-[#9CA3AF]">{formatToIST(event.created_at)}</p>
                         </div>

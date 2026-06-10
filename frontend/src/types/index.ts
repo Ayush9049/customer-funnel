@@ -34,5 +34,6 @@ export interface AnalyticsOverview {
     anonymous_id: string | null;
     event_name: string;
     created_at: string;
+    properties?: Record<string, any>;
   }>;
 }

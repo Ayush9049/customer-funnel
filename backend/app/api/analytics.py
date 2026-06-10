@@ -9,12 +9,12 @@ router = APIRouter(prefix="/api/analytics", tags=["analytics"])
 
 
 @router.get("/funnel", response_model=FunnelResponse)
-def get_funnel(db: Session = Depends(get_db)) -> FunnelResponse:
+def get_funnel(project_id: int, db: Session = Depends(get_db)) -> FunnelResponse:
     service = FunnelService(db)
-    return FunnelResponse(**service.get_funnel_counts())
+    return FunnelResponse(**service.get_funnel_counts(project_id=project_id))
 
 
 @router.get("/overview", response_model=AnalyticsOverview)
-def get_overview(db: Session = Depends(get_db)) -> AnalyticsOverview:
+def get_overview(project_id: int, db: Session = Depends(get_db)) -> AnalyticsOverview:
     service = FunnelService(db)
-    return AnalyticsOverview(**service.get_overview())
+    return AnalyticsOverview(**service.get_overview(project_id=project_id))

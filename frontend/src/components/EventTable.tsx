@@ -88,7 +88,18 @@ export default function EventTable({
               events.map((event) => (
                 <tr key={event.id} className="border-b border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors">
                   <td className="px-4 py-4 text-sm font-bold text-[#1a1a1a]">{formatEventName(event.event_name)}</td>
-                  <td className="px-4 py-4 text-sm text-[#6B7280]">{event.user_id ?? '—'}</td>
+                  <td className="px-4 py-4 text-sm text-[#6B7280]">
+                    <div className="customer-info">
+                      <div className="customer-name font-medium text-[#1a1a1a]">
+                        {event.properties?.customer_name || event.properties?.customer_email || event.user_id || '—'}
+                      </div>
+                      {event.user_id && (
+                        <div className="customer-phone text-xs text-[#9CA3AF] mt-0.5">
+                          {event.user_id}
+                        </div>
+                      )}
+                    </div>
+                  </td>
                   <td className="px-4 py-4 text-sm text-[#6B7280]">{event.anonymous_id ?? '—'}</td>
                   <td className="px-4 py-4 text-sm text-[#6B7280]">
                     <code

@@ -10,9 +10,10 @@ class FunnelService:
     def __init__(self, db: Session) -> None:
         self.db = db
 
-    def get_funnel_counts(self) -> dict[str, int]:
+    def get_funnel_counts(self, project_id: int) -> dict[str, int]:
         rows = (
             self.db.query(Event.event_name, func.count(Event.id).label("count"))
+            .filter(Event.project_id == project_id)
             .filter(Event.event_name.in_(FUNNEL_EVENTS))
             .group_by(Event.event_name)
             .all()
@@ -22,14 +23,24 @@ class FunnelService:
             counts[event_name] = int(count)
         return counts
 
-    def get_overview(self) -> dict[str, object]:
-        funnel = self.get_funnel_counts()
-        total_events = self.db.query(func.count(Event.id)).scalar() or 0
+    def get_overview(self, project_id: int) -> dict[str, object]:
+        funnel = self.get_funnel_counts(project_id)
+        total_events = (
+            self.db.query(func.count(Event.id))
+            .filter(Event.project_id == project_id)
+            .scalar() or 0
+        )
         unique_users = (
-            self.db.query(func.count(distinct(func.coalesce(Event.user_id, Event.anonymous_id)))).scalar() or 0
+            self.db.query(func.count(distinct(func.coalesce(Event.user_id, Event.anonymous_id))))
+            .filter(Event.project_id == project_id)
+            .scalar() or 0
         )
         recent_events = (
-            self.db.query(Event).order_by(Event.created_at.desc()).limit(5).all()
+            self.db.query(Event)
+            .filter(Event.project_id == project_id)
+            .order_by(Event.created_at.desc())
+            .limit(5)
+            .all()
         )
         return {
             "total_events": int(total_events),

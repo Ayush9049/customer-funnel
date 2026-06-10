@@ -16,6 +16,7 @@ def track_event(payload: EventTrackRequest, db: Session = Depends(get_db)) -> Ev
 
 @router.get("", response_model=EventListResponse)
 def get_events(
+    project_id: int,
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=20, ge=1, le=100),
     user_id: str | None = None,
@@ -23,4 +24,10 @@ def get_events(
     db: Session = Depends(get_db),
 ) -> EventListResponse:
     service = EventService(db)
-    return service.list_events(page=page, page_size=page_size, user_id=user_id, event_name=event_name)
+    return service.list_events(
+        project_id=project_id,
+        page=page,
+        page_size=page_size,
+        user_id=user_id,
+        event_name=event_name,
+    )
