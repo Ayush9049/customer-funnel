@@ -18,22 +18,9 @@ const API_KEY =
   "demo-key";
 
 async function request<T>(path: string): Promise<T> {
-  const fullUrl = `${API_BASE_URL}${path}`;
-
-  console.log("================================");
-  console.log("API REQUEST:", fullUrl);
-  console.log("================================");
-
-  const response = await fetch(fullUrl);
+  const response = await fetch(`${API_BASE_URL}${path}`);
 
   if (!response.ok) {
-    console.error(
-      "API ERROR:",
-      response.status,
-      response.statusText,
-      fullUrl
-    );
-
     throw new Error(`Request failed with status ${response.status}`);
   }
 
@@ -41,34 +28,19 @@ async function request<T>(path: string): Promise<T> {
 }
 
 export async function getProjects(): Promise<Project[]> {
-  console.log("LOADING PROJECTS");
   return request("/api/projects");
 }
 
 export async function getOverview(
   projectId: number
 ): Promise<AnalyticsOverview> {
-  const url = `/api/analytics/overview?project_id=${projectId}`;
-
-  console.log("================================");
-  console.log("OVERVIEW PROJECT ID:", projectId);
-  console.log("OVERVIEW URL:", `${API_BASE_URL}${url}`);
-  console.log("================================");
-
-  return request(url);
+  return request(`/api/analytics/overview?project_id=${projectId}`);
 }
 
 export async function getFunnel(
   projectId: number
 ): Promise<FunnelResponse> {
-  const url = `/api/analytics/funnel?project_id=${projectId}`;
-
-  console.log("================================");
-  console.log("FUNNEL PROJECT ID:", projectId);
-  console.log("FUNNEL URL:", `${API_BASE_URL}${url}`);
-  console.log("================================");
-
-  return request(url);
+  return request(`/api/analytics/funnel?project_id=${projectId}`);
 }
 
 export async function getEvents(params: {
@@ -92,14 +64,7 @@ export async function getEvents(params: {
     search.set("event_name", params.eventName);
   }
 
-  const url = `/api/events?${search.toString()}`;
-
-  console.log("================================");
-  console.log("EVENTS PROJECT ID:", params.projectId);
-  console.log("EVENTS URL:", `${API_BASE_URL}${url}`);
-  console.log("================================");
-
-  return request(url);
+  return request(`/api/events?${search.toString()}`);
 }
 
 export async function trackEvent(payload: {
@@ -135,8 +100,6 @@ export async function trackEvent(payload: {
 
   const eventName = payload.event_name.trim();
 
-  console.log("TRACKING EVENT:", eventName);
-
   try {
     const response = await fetch(
       `${API_BASE_URL}/api/events/track`,
@@ -155,11 +118,6 @@ export async function trackEvent(payload: {
       }
     );
 
-    console.log(
-      "TRACKING RESPONSE STATUS:",
-      response.status
-    );
-
     if (!response.ok) {
       throw new Error(
         `Tracking failed with status ${response.status}`
@@ -168,7 +126,7 @@ export async function trackEvent(payload: {
 
     return response.json();
   } catch (error) {
-    console.error("TRACKING EVENT FAILED:", error);
+    console.error("Tracking event failed:", error);
     throw error;
   }
 }
