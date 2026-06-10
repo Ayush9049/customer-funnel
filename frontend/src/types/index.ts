@@ -37,3 +37,10 @@ export interface AnalyticsOverview {
     properties?: Record<string, any>;
   }>;
 }
+
+export interface Project {
+  id: number;
+  name: string;
+  api_key: string;
+  created_at: string;
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getEvents, getFunnel, getOverview } from '../services/api';
-import type { AnalyticsOverview, EventItem, FunnelResponse } from '../types';
+import { getEvents, getFunnel, getOverview, getProjects } from '../services/api';
+import type { AnalyticsOverview, EventItem, FunnelResponse, Project } from '../types';
 import EventTable from '../components/EventTable';
 import FunnelChart from '../components/FunnelChart';
 import StatsCards from '../components/StatsCards';
@@ -21,6 +21,8 @@ function getEventStyle(eventName: string) {
 }
 
 export default function Dashboard() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
   const [funnel, setFunnel] = useState<FunnelResponse | null>(null);
   const [events, setEvents] = useState<EventItem[]>([]);
@@ -34,6 +36,23 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const list = await getProjects();
+        setProjects(list);
+        if (list.length > 0) {
+          setSelectedProject(list[0]);
+        }
+      } catch (e) {
+        console.error('Failed to load projects:', e);
+      }
+    }
+    fetchProjects();
+  }, []);
+
+  const activeProjectId = selectedProject?.id || 2;
+
+  useEffect(() => {
     let cancelled = false;
     let intervalId: number | null = null;
 
@@ -42,9 +61,9 @@ export default function Dashboard() {
       setError(null);
       try {
         const [overviewData, funnelData, eventsData] = await Promise.all([
-          getOverview(),
-          getFunnel(),
-          getEvents({ page, pageSize, userId, eventName }),
+          getOverview(activeProjectId),
+          getFunnel(activeProjectId),
+          getEvents({ projectId: activeProjectId, page, pageSize, userId, eventName }),
         ]);
 
         if (!cancelled) {
@@ -77,7 +96,7 @@ export default function Dashboard() {
         window.clearInterval(intervalId);
       }
     };
-  }, [eventName, page, pageSize, userId]);
+  }, [activeProjectId, eventName, page, pageSize, userId]);
 
   return (
     <main className="min-h-screen bg-[#FAFAFA]">
@@ -100,8 +119,30 @@ export default function Dashboard() {
                 </a>
               ))}
             </div>
-            <div className="inline-flex items-center rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-medium">
-              Last 30 days
+            <div className="flex items-center gap-3">
+              {projects.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-[#6B7280] font-bold uppercase tracking-wider">Project:</span>
+                  <select
+                    value={selectedProject?.id ?? ''}
+                    onChange={(e) => {
+                      const id = Number(e.target.value);
+                      const proj = projects.find((p) => p.id === id);
+                      if (proj) setSelectedProject(proj);
+                    }}
+                    className="rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-bold outline-none focus:border-[#1a1a1a] focus:ring-2 focus:ring-[#1a1a1a]/10 cursor-pointer"
+                  >
+                    {projects.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <div className="inline-flex items-center rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-medium">
+                Last 30 days
+              </div>
             </div>
           </div>
         </nav>

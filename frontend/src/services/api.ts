@@ -1,4 +1,4 @@
-import type { AnalyticsOverview, EventListResponse, FunnelResponse } from '../types';
+import type { AnalyticsOverview, EventListResponse, FunnelResponse, Project } from '../types';
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ??
@@ -16,22 +16,28 @@ async function request<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export async function getOverview(): Promise<AnalyticsOverview> {
-  return request('/api/analytics/overview');
+export async function getProjects(): Promise<Project[]> {
+  return request('/api/projects');
 }
 
-export async function getFunnel(): Promise<FunnelResponse> {
-  return request('/api/analytics/funnel');
+export async function getOverview(projectId: number): Promise<AnalyticsOverview> {
+  return request(`/api/analytics/overview?project_id=${projectId}`);
+}
+
+export async function getFunnel(projectId: number): Promise<FunnelResponse> {
+  return request(`/api/analytics/funnel?project_id=${projectId}`);
 }
 
 export async function getEvents(params: {
+  projectId: number;
   page?: number;
   pageSize?: number;
   userId?: string;
   eventName?: string;
-} = {}): Promise<EventListResponse> {
+}): Promise<EventListResponse> {
   const search = new URLSearchParams();
 
+  search.set('project_id', String(params.projectId));
   search.set('page', String(params.page ?? 1));
   search.set('page_size', String(params.pageSize ?? 10));
 
