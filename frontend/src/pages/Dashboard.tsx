@@ -50,7 +50,7 @@ export default function Dashboard() {
     fetchProjects();
   }, []);
 
-  const activeProjectId = selectedProject?.id || 2;
+  const activeProjectId = selectedProject?.id || 1;
 
   useEffect(() => {
     let cancelled = false;
