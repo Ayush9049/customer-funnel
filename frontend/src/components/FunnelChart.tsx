@@ -20,6 +20,26 @@ export default function FunnelChart({ data }: FunnelChartProps) {
 
   const maxValue = Math.max(...values.map((stage) => stage.value), 1);
 
+  // Calculate drop-offs between stages
+  const dropOffs = values.map((stage, index) => {
+    if (index === 0) return 0;
+    return Math.max(values[index - 1].value - stage.value, 0);
+  });
+
+  // Find highest drop-off
+  const highestDropOffIndex = dropOffs.indexOf(Math.max(...dropOffs));
+  const highestDropOffStage = highestDropOffIndex > 0 
+    ? `${stages[highestDropOffIndex - 1].label} → ${stages[highestDropOffIndex].label}`
+    : null;
+
+  // Calculate total lost users
+  const totalLost = dropOffs.reduce((sum, d) => sum + d, 0);
+
+  // Calculate overall conversion (first to last stage)
+  const overallConversion = values[0].value > 0 
+    ? Math.round((values[values.length - 1].value / values[0].value) * 100)
+    : 0;
+
   return (
     <div className="rounded-lg border border-[#E5E7EB] bg-white p-6 shadow-subtle">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -34,28 +54,67 @@ export default function FunnelChart({ data }: FunnelChartProps) {
         {values.map((stage, index) => {
           const previousValue = index === 0 ? stage.value : values[index - 1].value;
           const conversion = previousValue > 0 ? Math.round((stage.value / previousValue) * 100) : 0;
-          const width = stage.value > 0 ? Math.max((stage.value / maxValue) * 100, 2) : 0;
+          const width = maxValue > 0 ? (stage.value / maxValue) * 100 : 0;
+          const dropOff = dropOffs[index];
 
           return (
-            <div key={stage.key} className="space-y-3">
-              <div className="flex items-center justify-between text-sm font-semibold text-[#1a1a1a]">
-                <span>{stage.label}</span>
-                <span className="text-sm font-medium text-[#9CA3AF]">
-                  {stage.value > 0 ? `${stage.value.toLocaleString()} · ${conversion}%` : ''}
-                </span>
-              </div>
-              {stage.value > 0 && (
+            <div key={stage.key}>
+              {/* Stage row with count and conversion % */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-sm font-semibold text-[#1a1a1a]">
+                  <span>{stage.label}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-[#1a1a1a]">{stage.value.toLocaleString()}</span>
+                    {index > 0 && (
+                      <span title="Conversion from previous step" className="text-xs font-medium text-[#6B7280] bg-[#F3F4F6] px-2 py-1 rounded">
+                        {conversion}%
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Progress bar */}
                 <div className="h-3 overflow-hidden rounded-full border border-[#D1D5DB] bg-[#F9FAFB]">
                   <div
                     className="h-full rounded-full bg-[#D1D5DB] transition-all duration-300"
-                    style={{ width: `${width}%` }}
+                    style={{ width: `${Math.max(width, 1)}%` }}
                   />
+                </div>
+              </div>
+
+              {/* Drop-off indicator */}
+              {dropOff > 0 && index < values.length - 1 && (
+                <div className="mt-2 flex items-center gap-2 text-xs text-[#9CA3AF]">
+                  <span>↓ Lost {dropOff} {dropOff === 1 ? 'user' : 'users'}</span>
                 </div>
               )}
             </div>
           );
         })}
       </div>
+
+      {/* Funnel insights footer */}
+      {values[0].value > 0 && (
+        <div className="mt-8 border-t border-[#E5E7EB] pt-6 space-y-3">
+          <div className="text-xs font-medium text-[#9CA3AF] uppercase tracking-[0.24em]">Funnel Insights</div>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {highestDropOffStage && (
+              <div className="rounded-lg bg-[#F9FAFB] p-3">
+                <p className="text-xs text-[#6B7280] mb-1">Highest Drop-off</p>
+                <p className="text-sm font-semibold text-[#1a1a1a]">{highestDropOffStage}</p>
+              </div>
+            )}
+            <div className="rounded-lg bg-[#F9FAFB] p-3">
+              <p className="text-xs text-[#6B7280] mb-1">Lost Users</p>
+              <p className="text-sm font-semibold text-[#1a1a1a]">{totalLost}</p>
+            </div>
+            <div className="rounded-lg bg-[#F9FAFB] p-3">
+              <p className="text-xs text-[#6B7280] mb-1">Overall Conversion</p>
+              <p className="text-sm font-semibold text-[#1a1a1a]">{overallConversion}%</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
