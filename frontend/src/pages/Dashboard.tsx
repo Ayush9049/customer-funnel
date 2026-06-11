@@ -98,7 +98,7 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen bg-[#FAFAFA]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8 flex items-center justify-between gap-3">
+        <div className="mb-8 rounded-lg border border-[#E5E7EB] bg-white px-5 py-4 shadow-subtle flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] text-sm font-bold text-white">S</div>
             <span className="text-sm font-bold text-[#1a1a1a]">Shoption Analytics</span>
