@@ -6,8 +6,6 @@ import FunnelChart from '../components/FunnelChart';
 import StatsCards from '../components/StatsCards';
 import { formatToIST, formatEventName } from '../utils/format';
 
-const navItems = ['Dashboard', 'Events', 'Funnels', 'Settings'];
-
 const eventTypeStyles: Record<string, string> = {
   purchase: 'border-[#16A34A] text-[#16A34A]',
   add_to_cart: 'border-[#2563EB] text-[#2563EB]',
@@ -100,51 +98,31 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen bg-[#FAFAFA]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <nav className="mb-8 rounded-lg border border-[#E5E7EB] bg-white px-5 py-4 shadow-subtle">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] text-sm font-bold text-white">S</div>
-              <span className="text-sm font-bold text-[#1a1a1a]">Shoption Analytics</span>
+        <div className="mb-8 flex items-center justify-end gap-3">
+          {projects.length > 0 && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-[#6B7280] font-bold uppercase tracking-wider">Project:</span>
+              <select
+                value={selectedProject?.id ?? ''}
+                onChange={(e) => {
+                  const id = Number(e.target.value);
+                  const proj = projects.find((p) => p.id === id);
+                  if (proj) setSelectedProject(proj);
+                }}
+                className="rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-bold outline-none focus:border-[#1a1a1a] focus:ring-2 focus:ring-[#1a1a1a]/10 cursor-pointer"
+              >
+                {projects.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className="flex flex-wrap items-center gap-5 text-sm font-medium text-[#6B7280]">
-              {navItems.map((item) => (
-                <a key={item} href="#" className="transition hover:text-[#1a1a1a] flex items-center gap-2">
-                  <span>{item}</span>
-                  {item === 'Events' && total > 0 && (
-                    <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 rounded-full bg-[#1a1a1a] text-white text-xs font-bold">
-                      {total}
-                    </span>
-                  )}
-                </a>
-              ))}
-            </div>
-            <div className="flex items-center gap-3">
-              {projects.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-[#6B7280] font-bold uppercase tracking-wider">Project:</span>
-                  <select
-                    value={selectedProject?.id ?? ''}
-                    onChange={(e) => {
-                      const id = Number(e.target.value);
-                      const proj = projects.find((p) => p.id === id);
-                      if (proj) setSelectedProject(proj);
-                    }}
-                    className="rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-bold outline-none focus:border-[#1a1a1a] focus:ring-2 focus:ring-[#1a1a1a]/10 cursor-pointer"
-                  >
-                    {projects.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-              <div className="inline-flex items-center rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-medium">
-                Last 30 days
-              </div>
-            </div>
+          )}
+          <div className="inline-flex items-center rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-medium">
+            Last 30 days
           </div>
-        </nav>
+        </div>
 
         <section className="mb-8 rounded-lg border border-[#E5E7EB] bg-white px-6 py-6 shadow-subtle">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
