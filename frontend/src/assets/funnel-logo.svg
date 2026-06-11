@@ -1,0 +1,21 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="funnelLogoTitle">
+  <title id="funnelLogoTitle">Funnel Analytics logo</title>
+  <defs>
+    <linearGradient id="funnelGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22C55E" />
+      <stop offset="40%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+    <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#22C55E" />
+      <stop offset="100%" stop-color="#0F766E" />
+    </linearGradient>
+  </defs>
+  <rect x="22" y="20" width="16" height="40" rx="4" fill="#2563EB" />
+  <rect x="44" y="12" width="16" height="48" rx="4" fill="#14B8A6" />
+  <rect x="66" y="4" width="16" height="56" rx="4" fill="#22C55E" />
+  <path d="M16 28C16 20.268 22.268 14 30 14H90C97.732 14 104 20.268 104 28V40C104 47.732 97.732 54 90 54H30C22.268 54 16 47.732 16 40V28Z" fill="url(#funnelGradient)" />
+  <path d="M32 54C32 46.268 38.268 40 46 40H74C81.732 40 88 46.268 88 54V72C88 79.732 81.732 86 74 86H46C38.268 86 32 79.732 32 72V54Z" fill="#312E81" />
+  <path d="M46 86C46 83.791 47.791 82 50 82H70C72.209 82 74 83.791 74 86V96C74 98.209 72.209 100 70 100H50C47.791 100 46 98.209 46 96V86Z" fill="#4338CA" />
+  <circle cx="60" cy="108" r="8" fill="#22C55E" />
+</svg>
