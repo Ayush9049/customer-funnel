@@ -27,7 +27,6 @@ export default function Dashboard() {
   const [funnel, setFunnel] = useState<FunnelResponse | null>(null);
   const [events, setEvents] = useState<EventItem[]>([]);
   const [page, setPage] = useState(1);
-  const [userId, setUserId] = useState('');
   const [eventName, setEventName] = useState('');
   const [pageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -63,7 +62,7 @@ export default function Dashboard() {
         const [overviewData, funnelData, eventsData] = await Promise.all([
           getOverview(activeProjectId),
           getFunnel(activeProjectId),
-          getEvents({ projectId: activeProjectId, page, pageSize, userId, eventName }),
+          getEvents({ projectId: activeProjectId, page, pageSize, eventName }),
         ]);
 
         if (!cancelled) {
@@ -96,7 +95,7 @@ export default function Dashboard() {
         window.clearInterval(intervalId);
       }
     };
-  }, [activeProjectId, eventName, page, pageSize, userId]);
+  }, [activeProjectId, eventName, page, pageSize]);
 
   return (
     <main className="min-h-screen bg-[#FAFAFA]">
@@ -219,12 +218,7 @@ export default function Dashboard() {
               totalPages={totalPages}
               total={total}
               pageSize={pageSize}
-              userId={userId}
               eventName={eventName}
-              onUserIdChange={(value) => {
-                setPage(1);
-                setUserId(value);
-              }}
               onEventNameChange={(value) => {
                 setPage(1);
                 setEventName(value);

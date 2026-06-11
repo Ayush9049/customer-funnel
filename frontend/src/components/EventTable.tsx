@@ -7,9 +7,7 @@ interface EventTableProps {
   totalPages: number;
   total: number;
   pageSize: number;
-  userId: string;
   eventName: string;
-  onUserIdChange: (value: string) => void;
   onEventNameChange: (value: string) => void;
   onPageChange: (value: number) => void;
 }
@@ -22,9 +20,7 @@ export default function EventTable({
   totalPages,
   total,
   pageSize,
-  userId,
   eventName,
-  onUserIdChange,
   onEventNameChange,
   onPageChange,
 }: EventTableProps) {
@@ -39,15 +35,6 @@ export default function EventTable({
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 xl:w-[420px]">
-          <label className="flex flex-col gap-2 text-sm text-[#6B7280] font-medium">
-            <span>User ID</span>
-            <input
-              value={userId}
-              onChange={(event) => onUserIdChange(event.target.value)}
-              placeholder="user-1001"
-              className="rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-3 text-[#1a1a1a] outline-none focus:border-[#1a1a1a] focus:ring-2 focus:ring-[#1a1a1a]/10 font-medium"
-            />
-          </label>
           <label className="flex flex-col gap-2 text-sm text-[#6B7280] font-medium">
             <span>Event Name</span>
             <select

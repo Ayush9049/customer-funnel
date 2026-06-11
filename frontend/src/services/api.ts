@@ -47,7 +47,6 @@ export async function getEvents(params: {
   projectId: number;
   page?: number;
   pageSize?: number;
-  userId?: string;
   eventName?: string;
 }): Promise<EventListResponse> {
   const search = new URLSearchParams();
@@ -55,10 +54,6 @@ export async function getEvents(params: {
   search.set("project_id", String(params.projectId));
   search.set("page", String(params.page ?? 1));
   search.set("page_size", String(params.pageSize ?? 10));
-
-  if (params.userId) {
-    search.set("user_id", params.userId);
-  }
 
   if (params.eventName) {
     search.set("event_name", params.eventName);
