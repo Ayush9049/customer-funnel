@@ -149,7 +149,7 @@ export default function Dashboard() {
         <section className="mb-8 rounded-lg border border-[#E5E7EB] bg-white px-6 py-6 shadow-subtle">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-2xl">
-              <h1 className="text-3xl font-bold tracking-tight text-[#1a1a1a]">Funnel analytics for client-side product journeys.</h1>
+              <h1 className="text-3xl font-bold tracking-tight text-[#1a1a1a]">Funnel Analytics</h1>
               <p className="mt-3 text-sm leading-6 text-[#6B7280]">
                 Track login-to-purchase behavior, inspect individual events, and surface a concise dashboard for the
                 product funnel.
