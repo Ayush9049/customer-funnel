@@ -67,9 +67,22 @@ export default function Dashboard() {
         if (!cancelled) {
           setOverview(overviewData);
           setFunnel(funnelData);
-          setEvents(eventsData.data);
-          setTotal(eventsData.total);
-          setTotalPages(eventsData.total_pages || 1);
+          // Temporary debug log to inspect events response shape
+          // Cast to `any` so we can safely inspect non-typed response shapes
+          // eslint-disable-next-line no-console
+          const rawEventsData = eventsData as any;
+          console.log('EVENTS RESPONSE', rawEventsData);
+
+          // Support multiple possible response shapes (data/items/results/events)
+          const eventsArray = rawEventsData?.data ?? rawEventsData?.items ?? rawEventsData?.results ?? rawEventsData?.events ?? [];
+
+          setEvents(eventsArray);
+
+          const totalCount =
+            rawEventsData?.total ?? rawEventsData?.total_count ?? rawEventsData?.count ?? eventsArray.length;
+
+          setTotal(totalCount);
+          setTotalPages(eventsData?.total_pages ?? Math.max(1, Math.ceil(totalCount / pageSize)));
         }
       } catch (fetchError) {
         if (!cancelled) {
