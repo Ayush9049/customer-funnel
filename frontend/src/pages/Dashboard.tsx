@@ -98,7 +98,12 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen bg-[#FAFAFA]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8 flex items-center justify-end gap-3">
+        <div className="mb-8 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] text-sm font-bold text-white">S</div>
+            <span className="text-sm font-bold text-[#1a1a1a]">Shoption Analytics</span>
+          </div>
+          <div className="flex items-center gap-3">
           {projects.length > 0 && (
             <div className="flex items-center gap-2">
               <span className="text-xs text-[#6B7280] font-bold uppercase tracking-wider">Project:</span>
@@ -121,6 +126,7 @@ export default function Dashboard() {
           )}
           <div className="inline-flex items-center rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-medium">
             Last 30 days
+          </div>
           </div>
         </div>
 
