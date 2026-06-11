@@ -5,7 +5,7 @@ import EventTable from '../components/EventTable';
 import FunnelChart from '../components/FunnelChart';
 import StatsCards from '../components/StatsCards';
 import { formatToIST, formatEventName } from '../utils/format';
-import logoImage from '../assets/funnel-logo.svg';
+import logoImage from '../assets/funnel_logo.png';
 
 const eventTypeStyles: Record<string, string> = {
   purchase: 'border-[#16A34A] text-[#16A34A]',
@@ -101,7 +101,7 @@ export default function Dashboard() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8 rounded-lg border border-[#E5E7EB] bg-white px-5 py-4 shadow-subtle flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <img src="C:\Users\OMEN\Downloads\ChatGPT Image Jun 11, 2026, 02_34_08 PM.png"alt="Funnel Analytics logo" className="h-10 w-10 rounded-lg bg-[#1a1a1a] p-1 object-contain" />
+            <img src={logoImage} alt="Funnel Analytics logo" className="h-16 w-16 object-contain" />
             <span className="text-sm font-bold text-[#1a1a1a]">Funnel Analytics</span>
           </div>
           <div className="flex items-center gap-3">
