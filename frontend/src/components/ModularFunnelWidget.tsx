@@ -21,7 +21,7 @@ export default function ModularFunnelWidget({ data }: ModularFunnelWidgetProps) 
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-3 gap-3">
         <div className="rounded-xl bg-[#F8FAFC] p-3 border border-[#E2E8F0] flex flex-col justify-between">
           <span className="text-[10px] uppercase font-bold tracking-wider text-[#64748B]">Total Events</span>
           <span className="text-lg font-extrabold text-[#0F172A] mt-1.5">{kpis.total_events.toLocaleString()}</span>
@@ -29,10 +29,6 @@ export default function ModularFunnelWidget({ data }: ModularFunnelWidgetProps) 
         <div className="rounded-xl bg-[#F8FAFC] p-3 border border-[#E2E8F0] flex flex-col justify-between">
           <span className="text-[10px] uppercase font-bold tracking-wider text-[#64748B]">Unique Users</span>
           <span className="text-lg font-extrabold text-[#0F172A] mt-1.5">{kpis.unique_users.toLocaleString()}</span>
-        </div>
-        <div className="rounded-xl bg-[#F8FAFC] p-3 border border-[#E2E8F0] flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold tracking-wider text-[#64748B]">Conversion %</span>
-          <span className="text-lg font-extrabold text-emerald-600 mt-1.5">{kpis.conversion_rate}%</span>
         </div>
         <div className="rounded-xl bg-[#F8FAFC] p-3 border border-[#E2E8F0] flex flex-col justify-between">
           <span className="text-[10px] uppercase font-bold tracking-wider text-[#64748B]">Lost Users</span>
