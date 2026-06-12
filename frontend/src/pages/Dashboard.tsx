@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { getEvents, getFunnel, getOverview, getProjects } from '../services/api';
-import type { AnalyticsOverview, EventItem, FunnelResponse, Project } from '../types';
+import { getEvents, getFunnel, getOverview, getProjects, getModularFunnels } from '../services/api';
+import type { AnalyticsOverview, EventItem, FunnelResponse, Project, ModularFunnelsResponse } from '../types';
 import EventTable from '../components/EventTable';
 import FunnelChart from '../components/FunnelChart';
 import StatsCards from '../components/StatsCards';
+import ModularFunnelWidget from '../components/ModularFunnelWidget';
 import { formatToIST, formatEventName } from '../utils/format';
 import logoImage from '../assets/funnel_logo.png';
 
@@ -24,6 +25,8 @@ export default function Dashboard() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
   const [funnel, setFunnel] = useState<FunnelResponse | null>(null);
+  const [modularFunnels, setModularFunnels] = useState<ModularFunnelsResponse | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'modular'>('overview');
   const [events, setEvents] = useState<EventItem[]>([]);
   const [page, setPage] = useState(1);
   const [eventName, setEventName] = useState('');
@@ -58,15 +61,17 @@ export default function Dashboard() {
       setLoading(true);
       setError(null);
       try {
-        const [overviewData, funnelData, eventsData] = await Promise.all([
+        const [overviewData, funnelData, eventsData, modularData] = await Promise.all([
           getOverview(activeProjectId),
           getFunnel(activeProjectId),
           getEvents({ projectId: activeProjectId, page, pageSize, eventName }),
+          getModularFunnels(activeProjectId),
         ]);
 
         if (!cancelled) {
           setOverview(overviewData);
           setFunnel(funnelData);
+          setModularFunnels(modularData);
           // Temporary debug log to inspect events response shape
           // Cast to `any` so we can safely inspect non-typed response shapes
           // eslint-disable-next-line no-console
@@ -108,6 +113,7 @@ export default function Dashboard() {
       }
     };
   }, [activeProjectId, eventName, page, pageSize]);
+
 
   return (
     <main className="min-h-screen bg-[#FAFAFA]">
@@ -161,12 +167,35 @@ export default function Dashboard() {
             </div>
           </div>
         </section>
-
         {error ? (
           <div className="mb-6 rounded-lg border border-[#FCA5A5] bg-[#FEE2E2] px-4 py-3 text-sm text-[#991B1B] font-medium">
             {error}
           </div>
         ) : null}
+
+        {/* Tab switcher */}
+        <div className="mb-8 flex border-b border-[#E5E7EB] gap-6">
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`pb-3 text-sm font-bold border-b-2 transition-all ${
+              activeTab === 'overview'
+                ? 'border-[#1a1a1a] text-[#1a1a1a]'
+                : 'border-transparent text-[#9CA3AF] hover:text-[#6B7280]'
+            }`}
+          >
+            Overview Dashboard
+          </button>
+          <button
+            onClick={() => setActiveTab('modular')}
+            className={`pb-3 text-sm font-bold border-b-2 transition-all ${
+              activeTab === 'modular'
+                ? 'border-[#1a1a1a] text-[#1a1a1a]'
+                : 'border-transparent text-[#9CA3AF] hover:text-[#6B7280]'
+            }`}
+          >
+            Categorized Funnels
+          </button>
+        </div>
 
         {loading ? (
           <div className="rounded-lg border border-[#E5E7EB] bg-white px-6 py-10 text-center text-[#6B7280] shadow-subtle font-medium">
@@ -174,42 +203,63 @@ export default function Dashboard() {
           </div>
         ) : (
           <>
-            <StatsCards overview={overview} />
-            <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
-              <FunnelChart data={funnel} />
-              <div className="rounded-lg border border-[#E5E7EB] bg-white p-6 shadow-subtle">
-                <div className="flex flex-col gap-3">
-                  <div>
-                    <p className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Live Feed</p>
-                    <h2 className="mt-1 text-xl font-bold text-[#1a1a1a]">Recent Activity</h2>
-                  </div>
-                  <div className="divide-y divide-[#E5E7EB]">
-                    {(overview?.recent_events ?? []).map((event) => {
-                      const style = getEventStyle(event.event_name);
-                      return (
-                        <div key={event.id} className={`flex items-center gap-3 border-l-4 ${style} py-4 pl-4`}>
-                          <span className={`inline-flex h-2.5 w-2.5 rounded-full ${style}`} />
-                          <div className="min-w-0">
-                            <p className="text-sm font-bold text-[#1a1a1a]">{formatEventName(event.event_name)}</p>
-                            <div className="customer-info mt-1">
-                              <div className="customer-name text-sm text-[#1a1a1a] font-medium truncate">
-                                {event.properties?.customer_name || event.properties?.customer_email || event.user_id || event.anonymous_id || 'Anonymous user'}
-                              </div>
-                              {event.user_id && (
-                                <div className="customer-phone text-xs text-[#9CA3AF] mt-0.5">
-                                  {event.user_id}
+            {activeTab === 'overview' ? (
+              <>
+                <StatsCards overview={overview} />
+                <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr] mb-8">
+                  <FunnelChart data={funnel} />
+                  <div className="rounded-lg border border-[#E5E7EB] bg-white p-6 shadow-subtle">
+                    <div className="flex flex-col gap-3">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Live Feed</p>
+                        <h2 className="mt-1 text-xl font-bold text-[#1a1a1a]">Recent Activity</h2>
+                      </div>
+                      <div className="divide-y divide-[#E5E7EB]">
+                        {(overview?.recent_events ?? []).map((event) => {
+                          const style = getEventStyle(event.event_name);
+                          return (
+                            <div key={event.id} className={`flex items-center gap-3 border-l-4 ${style} py-4 pl-4`}>
+                              <span className={`inline-flex h-2.5 w-2.5 rounded-full ${style}`} />
+                              <div className="min-w-0">
+                                <p className="text-sm font-bold text-[#1a1a1a]">{formatEventName(event.event_name)}</p>
+                                <div className="customer-info mt-1">
+                                  <div className="customer-name text-sm text-[#1a1a1a] font-medium truncate">
+                                    {event.properties?.customer_name || event.properties?.customer_email || event.user_id || event.anonymous_id || 'Anonymous user'}
+                                  </div>
+                                  {event.user_id && (
+                                    <div className="customer-phone text-xs text-[#9CA3AF] mt-0.5">
+                                      {event.user_id}
+                                    </div>
+                                  )}
                                 </div>
-                              )}
+                              </div>
+                              <p className="ml-auto text-xs text-[#9CA3AF]">{formatToIST(event.created_at)}</p>
                             </div>
-                          </div>
-                          <p className="ml-auto text-xs text-[#9CA3AF]">{formatToIST(event.created_at)}</p>
-                        </div>
-                      );
-                    })}
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </>
+            ) : (
+              <>
+                {modularFunnels ? (
+                  <div className="grid gap-8 md:grid-cols-2 mb-8">
+                    <ModularFunnelWidget data={modularFunnels.authentication} />
+                    <ModularFunnelWidget data={modularFunnels.discovery} />
+                    <ModularFunnelWidget data={modularFunnels.cart} />
+                    <ModularFunnelWidget data={modularFunnels.checkout} />
+                    <ModularFunnelWidget data={modularFunnels.orders} />
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-[#E5E7EB] bg-white px-6 py-10 text-center text-[#6B7280] shadow-subtle font-medium mb-8">
+                    No modular funnels data available.
+                  </div>
+                )}
+              </>
+            )}
+
             <EventTable
               events={events}
               page={page}
@@ -229,3 +279,4 @@ export default function Dashboard() {
     </main>
   );
 }
+

@@ -3,7 +3,9 @@ import type {
   EventListResponse,
   FunnelResponse,
   Project,
+  ModularFunnelsResponse,
 } from "../types";
+
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ??
@@ -42,6 +44,13 @@ export async function getFunnel(
 ): Promise<FunnelResponse> {
   return request(`/api/analytics/funnel?project_id=${projectId}`);
 }
+
+export async function getModularFunnels(
+  projectId: number
+): Promise<ModularFunnelsResponse> {
+  return request(`/api/analytics/modular-funnels?project_id=${projectId}`);
+}
+
 
 export async function getEvents(params: {
   projectId: number;

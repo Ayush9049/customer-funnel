@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.schemas.analytics import AnalyticsOverview, FunnelResponse
+from app.schemas.analytics import AnalyticsOverview, FunnelResponse, ModularFunnelsResponse
 from app.services.funnel_service import FunnelService
 
 router = APIRouter(prefix="/api/analytics", tags=["analytics"])
@@ -18,3 +18,10 @@ def get_funnel(project_id: int, db: Session = Depends(get_db)) -> FunnelResponse
 def get_overview(project_id: int, db: Session = Depends(get_db)) -> AnalyticsOverview:
     service = FunnelService(db)
     return AnalyticsOverview(**service.get_overview(project_id=project_id))
+
+
+@router.get("/modular-funnels", response_model=ModularFunnelsResponse)
+def get_modular_funnels(project_id: int, db: Session = Depends(get_db)) -> ModularFunnelsResponse:
+    service = FunnelService(db)
+    return ModularFunnelsResponse(**service.get_modular_funnels(project_id=project_id))
+

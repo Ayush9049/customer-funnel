@@ -37,3 +37,30 @@ class AnalyticsOverview(BaseModel):
     purchases: int
     funnel: dict[str, int]
     recent_events: list[RecentEvent] = []
+
+
+class ModularFunnelStage(BaseModel):
+    event_name: str
+    count: int
+    unique_users: int
+
+
+class ModularFunnelKPIs(BaseModel):
+    total_events: int
+    unique_users: int
+    conversion_rate: float
+    lost_users: int
+
+
+class ModularFunnelData(BaseModel):
+    name: str
+    stages: list[ModularFunnelStage]
+    kpis: ModularFunnelKPIs
+
+
+class ModularFunnelsResponse(BaseModel):
+    authentication: ModularFunnelData
+    discovery: ModularFunnelData
+    cart: ModularFunnelData
+    checkout: ModularFunnelData
+    orders: ModularFunnelData
