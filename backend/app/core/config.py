@@ -10,17 +10,12 @@ class Settings(BaseSettings):
 
     app_name: str = Field(default="Analytics Platform MVP", alias="APP_NAME")
     app_env: str = Field(default="development", alias="APP_ENV")
-    secret_key: str = Field(default="change-me-to-a-random-secret-in-production", alias="SECRET_KEY")
     database_url: str = Field(
-        default="sqlite:///analytics.db",
+        default="postgresql+psycopg2://postgres:postgres@localhost:5432/analytics_platform",
         alias="DATABASE_URL",
     )
-    postgres_db: str = Field(default="analytics_platform", alias="POSTGRES_DB")
-    postgres_user: str = Field(default="postgres", alias="POSTGRES_USER")
-    postgres_password: str = Field(default="postgres", alias="POSTGRES_PASSWORD")
     cors_origins: List[str] = Field(default_factory=lambda: ["http://localhost:5173"], alias="CORS_ORIGINS")
     auto_create_tables: bool = Field(default=True, alias="AUTO_CREATE_TABLES")
-    demo_project_api_key: str = Field(default="demo-key", alias="DEMO_PROJECT_API_KEY")
 
     @field_validator("cors_origins", mode="before")
     @classmethod

@@ -24,9 +24,7 @@ SAMPLE_EVENTS = [
     {"anonymous_id": "anon-abc-001", "event_name": "product_view", "properties": {"product_id": "P003"}},
 ]
 
-from app.core.config import settings
-
-DEMO_PROJECT_API_KEY = settings.demo_project_api_key
+DEMO_PROJECT_API_KEY = "demo-key"
 
 
 def seed_demo_data(db: Session) -> None:
