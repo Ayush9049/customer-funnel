@@ -7,7 +7,7 @@ from app.models.event import Event
 from app.models.project import Project
 from app.models.user import User
 
-
+LIVE_PROJECT_API_KEY = "pk_live_bcd39b8924457c7be39983e0117dd57f"
 SAMPLE_USERS = [
     "user-1001",
     "user-1002",
@@ -24,15 +24,21 @@ SAMPLE_EVENTS = [
     {"anonymous_id": "anon-abc-001", "event_name": "product_view", "properties": {"product_id": "P003"}},
 ]
 
-DEMO_PROJECT_API_KEY = "demo-key"
 
-
-def seed_demo_data(db: Session) -> None:
-    project = db.query(Project).filter(Project.api_key == DEMO_PROJECT_API_KEY).one_or_none()
+def ensure_live_project(db: Session) -> Project:
+    project = db.query(Project).filter(Project.api_key == LIVE_PROJECT_API_KEY).one_or_none()
     if project is None:
-        project = Project(name="Demo Store", api_key=DEMO_PROJECT_API_KEY)
+        project = Project(name="Live Project", api_key=LIVE_PROJECT_API_KEY)
         db.add(project)
         db.flush()
+        print("Created live project for API key:", LIVE_PROJECT_API_KEY)
+    else:
+        print("Live project already exists for API key:", LIVE_PROJECT_API_KEY)
+    return project
+
+
+def seed_live_project_data(db: Session) -> None:
+    project = ensure_live_project(db)
 
     for external_user_id in SAMPLE_USERS:
         existing = db.query(User).filter(User.external_user_id == external_user_id).one_or_none()
@@ -41,10 +47,13 @@ def seed_demo_data(db: Session) -> None:
 
     db.flush()
 
-    existing_events = db.query(Event).count()
-    if existing_events == 0:
+    project_event_count = db.query(Event).filter(Event.project_id == project.id).count()
+    if project_event_count == 0:
         for item in SAMPLE_EVENTS:
-            db.add(Event(project_id=project.id, **item))
+            event_data = dict(item)
+            event_data.setdefault("created_at", datetime.now(timezone.utc))
+            db.add(Event(project_id=project.id, **event_data))
+        print("Seeded sample events for live project", project.id)
 
     db.commit()
 
@@ -52,7 +61,7 @@ def seed_demo_data(db: Session) -> None:
 if __name__ == "__main__":
     db = SessionLocal()
     try:
-        seed_demo_data(db)
-        print("Seed data created successfully.")
+        seed_live_project_data(db)
+        print("Seed live project data created successfully.")
     finally:
         db.close()

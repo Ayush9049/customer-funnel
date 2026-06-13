@@ -7,6 +7,7 @@ from app.api.projects import router as projects_router
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.models import event, user, project
+from app.utils.seed import seed_live_project_data
 
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
@@ -34,6 +35,10 @@ def root() -> dict[str, str]:
 def on_startup() -> None:
     if settings.app_env == "development" and settings.auto_create_tables:
         Base.metadata.create_all(bind=engine)
+        from app.core.database import SessionLocal
+
+        with SessionLocal() as db:
+            seed_live_project_data(db)
 
 @app.api_route("/health", methods=["GET", "HEAD"])
 def health():

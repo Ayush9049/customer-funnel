@@ -57,7 +57,7 @@ The dashboard will be available at `http://localhost:5173`.
   import Analytics from './sdk/src/analytics.js';
 
   Analytics.init({
-    apiKey: 'demo-key',
+    apiKey: 'pk_live_bcd39b8924457c7be39983e0117dd57f',
     endpoint: 'http://localhost:8000',
   });
 

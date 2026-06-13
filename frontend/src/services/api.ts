@@ -12,20 +12,28 @@ export const API_BASE_URL =
   import.meta.env.VITE_API_URL ??
   (import.meta.env.DEV ? "" : "https://customer-funnel-production.up.railway.app");
 
-const API_KEY =
+export const API_KEY =
   import.meta.env.VITE_ANALYTICS_API_KEY ??
   import.meta.env.VITE_API_KEY ??
-  "demo-key";
+  "pk_live_bcd39b8924457c7be39983e0117dd57f";
 
-async function request<T>(path: string): Promise<T> {
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${path}`;
-  console.log("Fetching analytics...", url);
+  const method = options.method ?? "GET";
+  console.log("Current API Key:", API_KEY);
+  console.log("Fetching analytics request:", {
+    url,
+    method,
+    payload: options.body ?? null,
+    apiKey: API_KEY,
+  });
 
-  const response = await fetch(url);
+  const response = await fetch(url, options);
   const text = await response.text();
 
-  console.log("Response:", {
+  console.log("Analytics response:", {
     url,
+    method,
     status: response.status,
     statusText: response.statusText,
     body: text,
@@ -118,22 +126,28 @@ export async function trackEvent(payload: {
   const eventName = payload.event_name.trim();
 
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/api/events/track`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          api_key: API_KEY,
-          user_id: payload.user_id ?? null,
-          anonymous_id: anonymousId,
-          event_name: eventName,
-          properties: payload.properties ?? {},
-        }),
-      }
-    );
+    const url = `${API_BASE_URL}/api/events/track`;
+  const payloadWithKey = {
+    api_key: API_KEY,
+    user_id: payload.user_id ?? null,
+    anonymous_id: anonymousId,
+    event_name: eventName,
+    properties: payload.properties ?? {},
+  };
+
+  console.log("Track event request:", {
+    url,
+    payload: payloadWithKey,
+    apiKey: API_KEY,
+  });
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payloadWithKey),
+  });
 
     if (!response.ok) {
       throw new Error(

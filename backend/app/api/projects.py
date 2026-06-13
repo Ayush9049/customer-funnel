@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 import secrets
 
@@ -34,11 +34,16 @@ def create_project(
         "api_key": new_project.api_key,
         "created_at": new_project.created_at
     }
+
+
 @router.get("")
 def get_projects(
+    request: Request,
     db: Session = Depends(get_db)
 ):
+    print("Projects endpoint called:", request.method, request.url)
     projects = db.query(Project).all()
+    print("Projects count:", len(projects))
 
     return [
         {

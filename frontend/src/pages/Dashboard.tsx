@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { API_BASE_URL, getEvents, getFunnel, getOverview, getProjects, getModularFunnels } from '../services/api';
+import { API_BASE_URL, API_KEY, getEvents, getFunnel, getOverview, getProjects, getModularFunnels } from '../services/api';
 import type { AnalyticsOverview, EventItem, FunnelResponse, Project, ModularFunnelsResponse } from '../types';
 import EventTable from '../components/EventTable';
 import FunnelChart from '../components/FunnelChart';
@@ -35,6 +35,7 @@ export default function Dashboard() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [projectsDebugPayload, setProjectsDebugPayload] = useState<unknown>(null);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -43,13 +44,20 @@ export default function Dashboard() {
 
       try {
         const list = await getProjects();
-        console.log('Projects response:', list);
+        console.log('Current API Key:', API_KEY);
+        console.log('Projects Response:', list);
+        console.log('Projects Count:', list.length);
         setProjects(list);
+        setProjectsDebugPayload(list);
 
         if (list.length > 0) {
           setSelectedProject(list[0]);
         } else {
-          setError('No projects available.');
+          setError(
+            `No projects available for API key ${API_KEY}. Projects returned: ${list.length}. Response payload: ${JSON.stringify(
+              list
+            )}`
+          );
           setLoading(false);
         }
       } catch (e) {
