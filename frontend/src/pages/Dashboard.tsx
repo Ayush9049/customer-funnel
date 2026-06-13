@@ -144,12 +144,12 @@ export default function Dashboard() {
 
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA]">
+    <main className="min-h-screen bg-[#000000]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8 rounded-lg border border-[#E5E7EB] bg-white px-5 py-4 shadow-subtle flex items-center justify-between gap-3">
+        <div className="mb-8 rounded-lg border border-slate-800 bg-slate-950 px-5 py-4 shadow-subtle flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <img src={logoImage} alt="Funnel Analytics logo" className="h-16 w-16 object-contain" />
-            <span className="text-sm font-bold text-[#1a1a1a]">Funnel Analytics</span>
+            <span className="text-sm font-bold text-[#F8FAFC]">Funnel Analytics</span>
           </div>
           <div className="flex items-center gap-3">
           {projects.length > 0 && (
@@ -162,7 +162,7 @@ export default function Dashboard() {
                   const proj = projects.find((p) => p.id === id);
                   if (proj) setSelectedProject(proj);
                 }}
-                className="rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-bold outline-none focus:border-[#1a1a1a] focus:ring-2 focus:ring-[#1a1a1a]/10 cursor-pointer"
+                className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-[#F8FAFC] font-bold outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-500/20 cursor-pointer"
               >
                 {projects.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -172,24 +172,24 @@ export default function Dashboard() {
               </select>
             </div>
           )}
-          <div className="inline-flex items-center rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-medium">
+          <div className="inline-flex items-center rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-[#F8FAFC] font-medium">
             Last 30 days
           </div>
           </div>
         </div>
 
-        <section className="mb-8 rounded-lg border border-[#E5E7EB] bg-white px-6 py-6 shadow-subtle">
+        <section className="mb-8 rounded-lg border border-slate-800 bg-slate-950 px-6 py-6 shadow-subtle">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-2xl">
-              <h1 className="text-3xl font-bold tracking-tight text-[#1a1a1a]">Funnel Analytics</h1>
-              <p className="mt-3 text-sm leading-6 text-[#6B7280]">
+              <h1 className="text-3xl font-bold tracking-tight text-[#F8FAFC]">Funnel Analytics</h1>
+              <p className="mt-3 text-sm leading-6 text-[#9CA3AF]">
                 Track login-to-purchase behavior, inspect individual events, and surface a concise dashboard for the
                 product funnel.
               </p>
             </div>
             <div className="flex flex-col gap-2">
               <span className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Backend endpoint</span>
-              <span className="inline-flex rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-medium">
+              <span className="inline-flex rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-[#F8FAFC] font-medium">
                 {API_BASE_URL || 'http://localhost:8000 (proxy)'}
               </span>
             </div>
@@ -202,13 +202,13 @@ export default function Dashboard() {
         ) : null}
 
         {/* Tab switcher */}
-        <div className="mb-8 flex border-b border-[#E5E7EB] gap-6">
+        <div className="mb-8 flex border-b border-slate-800 gap-6">
           <button
             onClick={() => setActiveTab('overview')}
             className={`pb-3 text-sm font-bold border-b-2 border-l-0 transition-all ${
               activeTab === 'overview'
-                ? 'border-[#1a1a1a] text-[#1a1a1a]'
-                : 'border-transparent text-[#9CA3AF] hover:text-[#6B7280]'
+                ? 'border-[#F8FAFC] text-[#F8FAFC]'
+                : 'border-transparent text-[#9CA3AF] hover:text-[#D1D5DB]'
             }`}
           >
             Overview Dashboard
@@ -217,8 +217,8 @@ export default function Dashboard() {
             onClick={() => setActiveTab('modular')}
             className={`pb-3 text-sm font-bold border-b-2 border-l-0 transition-all ${
               activeTab === 'modular'
-                ? 'border-[#1a1a1a] text-[#1a1a1a]'
-                : 'border-transparent text-[#9CA3AF] hover:text-[#6B7280]'
+                ? 'border-[#F8FAFC] text-[#F8FAFC]'
+                : 'border-transparent text-[#9CA3AF] hover:text-[#D1D5DB]'
             }`}
           >
             Categorized Funnels
@@ -226,7 +226,7 @@ export default function Dashboard() {
         </div>
 
         {loading ? (
-          <div className="rounded-lg border border-[#E5E7EB] bg-white px-6 py-10 text-center text-[#6B7280] shadow-subtle font-medium">
+          <div className="rounded-lg border border-slate-800 bg-slate-950 px-6 py-10 text-center text-[#F8FAFC] shadow-subtle font-medium">
             Loading analytics dashboard...
           </div>
         ) : (
@@ -236,22 +236,22 @@ export default function Dashboard() {
                 <StatsCards overview={overview} />
                 <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr] mb-8">
                   <FunnelChart data={funnel} />
-                  <div className="rounded-lg border border-[#E5E7EB] bg-white p-6 shadow-subtle">
+                  <div className="rounded-lg border border-slate-800 bg-slate-950 p-6 shadow-subtle">
                     <div className="flex flex-col gap-3">
                       <div>
                         <p className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Live Feed</p>
-                        <h2 className="mt-1 text-xl font-bold text-[#1a1a1a]">Recent Activity</h2>
+                        <h2 className="mt-1 text-xl font-bold text-[#F8FAFC]">Recent Activity</h2>
                       </div>
-                      <div className="divide-y divide-[#E5E7EB]">
+                      <div className="divide-y divide-slate-800">
                         {(overview?.recent_events ?? []).map((event) => {
                           const style = getEventStyle(event.event_name);
                           return (
                             <div key={event.id} className={`flex items-center gap-3 border-l-4 ${style} py-4 pl-4`}>
                               <span className={`inline-flex h-2.5 w-2.5 rounded-full ${style}`} />
                               <div className="min-w-0">
-                                <p className="text-sm font-bold text-[#1a1a1a]">{formatEventName(event.event_name)}</p>
+                                <p className="text-sm font-bold text-[#F8FAFC]">{formatEventName(event.event_name)}</p>
                                 <div className="customer-info mt-1">
-                                  <div className="customer-name text-sm text-[#1a1a1a] font-medium truncate">
+                                  <div className="customer-name text-sm text-[#F8FAFC] font-medium truncate">
                                     {event.properties?.customer_name || event.properties?.customer_email || event.user_id || event.anonymous_id || 'Anonymous user'}
                                   </div>
                                   {event.user_id && (
@@ -281,7 +281,7 @@ export default function Dashboard() {
                     <ModularFunnelWidget data={modularFunnels.orders} />
                   </div>
                 ) : (
-                  <div className="rounded-lg border border-[#E5E7EB] bg-white px-6 py-10 text-center text-[#6B7280] shadow-subtle font-medium mb-8">
+                  <div className="rounded-lg border border-slate-800 bg-slate-950 px-6 py-10 text-center text-[#F8FAFC] shadow-subtle font-medium mb-8">
                     No modular funnels data available.
                   </div>
                 )}

@@ -44,22 +44,22 @@ export default function EventTable({
   };
 
   return (
-    <div className="rounded-lg border border-[#E5E7EB] bg-white p-6 shadow-subtle">
+    <div className="rounded-lg border border-slate-800 bg-slate-950 p-6 shadow-subtle">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Event viewer</p>
-          <h2 className="mt-1 text-2xl font-bold text-[#1a1a1a]">Recent Tracked Events</h2>
+          <h2 className="mt-1 text-2xl font-bold text-[#F8FAFC]">Recent Tracked Events</h2>
           <p className="mt-2 text-sm text-[#9CA3AF]">
             Showing {events.length} of {total.toLocaleString()} events
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 xl:w-[420px]">
-          <label className="flex flex-col gap-2 text-sm text-[#6B7280] font-medium">
+          <label className="flex flex-col gap-2 text-sm text-[#9CA3AF] font-medium">
             <span>Event Name</span>
             <select
               value={eventName}
               onChange={(event) => onEventNameChange(event.target.value)}
-              className="rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-3 text-[#1a1a1a] outline-none focus:border-[#1a1a1a] focus:ring-2 focus:ring-[#1a1a1a]/10 font-medium"
+              className="rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-[#F8FAFC] outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-500/20 font-medium"
             >
               <option value="">All Events</option>
               {filterOptions.map((option) => (
@@ -72,10 +72,10 @@ export default function EventTable({
         </div>
       </div>
 
-      <div className="mt-6 overflow-x-auto rounded-lg border border-[#E5E7EB]">
+      <div className="mt-6 overflow-x-auto rounded-lg border border-slate-800">
         <table className="min-w-full text-left">
           <thead>
-            <tr className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] bg-[#FAFAFA] font-medium border-b border-[#E5E7EB]">
+            <tr className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] bg-slate-900 font-medium border-b border-slate-800">
               <th className="px-4 py-3">Event</th>
               <th className="px-4 py-3">User</th>
               <th className="px-4 py-3">Anonymous</th>
@@ -92,11 +92,11 @@ export default function EventTable({
               </tr>
             ) : (
               events.map((event) => (
-                <tr key={event.id} className="border-b border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors">
-                  <td className="px-4 py-4 text-sm font-bold text-[#1a1a1a]">{formatEventName(event.event_name)}</td>
-                  <td className="px-4 py-4 text-sm text-[#6B7280]">
+                <tr key={event.id} className="border-b border-slate-800 hover:bg-slate-900 transition-colors">
+                  <td className="px-4 py-4 text-sm font-bold text-[#F8FAFC]">{formatEventName(event.event_name)}</td>
+                  <td className="px-4 py-4 text-sm text-[#9CA3AF]">
                     <div className="customer-info">
-                      <div className="customer-name font-medium text-[#1a1a1a]">
+                      <div className="customer-name font-medium text-[#F8FAFC]">
                         {(event.properties?.customer_name as string) || (event.properties?.customer_email as string) || event.user_id || '—'}
                       </div>
                       {event.user_id && (
@@ -106,8 +106,8 @@ export default function EventTable({
                       )}
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-sm text-[#6B7280]">{event.anonymous_id ?? '—'}</td>
-                  <td className="px-4 py-4 text-sm text-[#6B7280]">
+                  <td className="px-4 py-4 text-sm text-[#9CA3AF]">{event.anonymous_id ?? '—'}</td>
+                  <td className="px-4 py-4 text-sm text-[#9CA3AF]">
                     {(() => {
                       const properties = event.properties || {};
                       const entries = Object.entries(properties);
@@ -120,7 +120,7 @@ export default function EventTable({
                         <div className="flex flex-col gap-2 max-w-[320px] md:max-w-[400px]">
                           {isExpanded ? (
                             <div className="relative">
-                              <pre className="overflow-x-auto max-h-[160px] overflow-y-auto rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] p-3 text-[11px] text-[#1a1a1a] font-mono whitespace-pre-wrap break-all">
+                              <pre className="overflow-x-auto max-h-[160px] overflow-y-auto rounded-lg border border-slate-800 bg-slate-900 p-3 text-[11px] text-[#F8FAFC] font-mono whitespace-pre-wrap break-all">
                                 {JSON.stringify(properties, null, 2)}
                               </pre>
                             </div>
@@ -132,7 +132,7 @@ export default function EventTable({
                                 return (
                                   <span
                                     key={key}
-                                    className="inline-flex items-center gap-1 rounded bg-[#F8FAFC] border border-[#E5E7EB] px-2 py-0.5 text-[11px] text-[#1a1a1a] font-medium"
+                                    className="inline-flex items-center gap-1 rounded bg-slate-900 border border-slate-800 px-2 py-0.5 text-[11px] text-[#F8FAFC] font-medium"
                                   >
                                     <span className="text-[#9CA3AF] font-normal">{key}:</span>
                                     <span className="truncate max-w-[120px]" title={stringValue}>
@@ -186,7 +186,7 @@ export default function EventTable({
         </table>
       </div>
 
-      <div className="mt-5 flex flex-col gap-3 text-sm text-[#6B7280] sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-5 flex flex-col gap-3 text-sm text-[#9CA3AF] sm:flex-row sm:items-center sm:justify-between">
         <p className="font-medium">
           Page {page} of {Math.max(totalPages, 1)} · {pageSize} rows per page
         </p>
@@ -194,14 +194,14 @@ export default function EventTable({
           <button
             onClick={() => onPageChange(Math.max(1, page - 1))}
             disabled={page <= 1}
-            className="rounded-lg px-3 py-2 text-sm font-bold text-[#1a1a1a] transition hover:bg-[#F8FAFC] disabled:cursor-not-allowed disabled:text-[#D1D5DB]"
+            className="rounded-lg px-3 py-2 text-sm font-bold text-[#F8FAFC] transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:text-[#6B7280]"
           >
             Previous
           </button>
           <button
             onClick={() => onPageChange(Math.min(totalPages, page + 1))}
             disabled={page >= totalPages}
-            className="rounded-lg px-3 py-2 text-sm font-bold text-[#1a1a1a] transition hover:bg-[#F8FAFC] disabled:cursor-not-allowed disabled:text-[#D1D5DB]"
+            className="rounded-lg px-3 py-2 text-sm font-bold text-[#F8FAFC] transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:text-[#6B7280]"
           >
             Next
           </button>

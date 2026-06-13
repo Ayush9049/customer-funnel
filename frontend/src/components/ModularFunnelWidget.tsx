@@ -11,28 +11,28 @@ export default function ModularFunnelWidget({ data }: ModularFunnelWidgetProps) 
   const maxCount = Math.max(...stages.map((s) => s.count), 1);
 
   return (
-    <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col gap-6">
+    <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col gap-6">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-4">
+      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="h-2.5 w-2.5 rounded-full bg-blue-600 animate-pulse" />
-          <h3 className="text-lg font-bold text-[#0F172A]">{name}</h3>
+          <div className="h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse" />
+          <h3 className="text-lg font-bold text-[#F8FAFC]">{name}</h3>
         </div>
       </div>
 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-xl bg-[#F8FAFC] p-3 border border-[#E2E8F0] flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold tracking-wider text-[#64748B]">Total Events</span>
-          <span className="text-lg font-extrabold text-[#0F172A] mt-1.5">{kpis.total_events.toLocaleString()}</span>
+        <div className="rounded-xl bg-slate-900 p-3 border border-slate-800 flex flex-col justify-between">
+          <span className="text-[10px] uppercase font-bold tracking-wider text-[#9CA3AF]">Total Events</span>
+          <span className="text-lg font-extrabold text-[#F8FAFC] mt-1.5">{kpis.total_events.toLocaleString()}</span>
         </div>
-        <div className="rounded-xl bg-[#F8FAFC] p-3 border border-[#E2E8F0] flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold tracking-wider text-[#64748B]">Unique Users</span>
-          <span className="text-lg font-extrabold text-[#0F172A] mt-1.5">{kpis.unique_users.toLocaleString()}</span>
+        <div className="rounded-xl bg-slate-900 p-3 border border-slate-800 flex flex-col justify-between">
+          <span className="text-[10px] uppercase font-bold tracking-wider text-[#9CA3AF]">Unique Users</span>
+          <span className="text-lg font-extrabold text-[#F8FAFC] mt-1.5">{kpis.unique_users.toLocaleString()}</span>
         </div>
-        <div className="rounded-xl bg-[#F8FAFC] p-3 border border-[#E2E8F0] flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold tracking-wider text-[#64748B]">Lost Users</span>
-          <span className="text-lg font-extrabold text-rose-500 mt-1.5">{kpis.lost_users.toLocaleString()}</span>
+        <div className="rounded-xl bg-slate-900 p-3 border border-slate-800 flex flex-col justify-between">
+          <span className="text-[10px] uppercase font-bold tracking-wider text-[#9CA3AF]">Lost Users</span>
+          <span className="text-lg font-extrabold text-rose-400 mt-1.5">{kpis.lost_users.toLocaleString()}</span>
         </div>
       </div>
 
@@ -67,22 +67,22 @@ export default function ModularFunnelWidget({ data }: ModularFunnelWidgetProps) 
               )}
 
               {/* Stage Content */}
-              <div className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-3.5 hover:bg-slate-50 transition-colors duration-150">
+              <div className="rounded-xl border border-slate-800 bg-slate-900 p-3.5 hover:bg-slate-800 transition-colors duration-150">
                 <div className="flex items-center justify-between text-sm mb-2">
-                  <div className="font-bold text-[#1E293B] flex items-center gap-2">
-                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-[#475569] text-[10px] font-extrabold">
+                  <div className="font-bold text-[#F8FAFC] flex items-center gap-2">
+                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-slate-700 text-[#F8FAFC] text-[10px] font-extrabold">
                       {idx + 1}
                     </span>
                     {formatEventName(stage.event_name)}
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <span className="text-xs text-[#64748B] block font-medium">Events</span>
-                      <span className="font-extrabold text-[#0F172A] text-sm">{stage.count.toLocaleString()}</span>
+                      <span className="text-xs text-[#9CA3AF] block font-medium">Events</span>
+                      <span className="font-extrabold text-[#F8FAFC] text-sm">{stage.count.toLocaleString()}</span>
                     </div>
-                    <div className="text-right border-l border-[#E2E8F0] pl-3">
-                      <span className="text-xs text-[#64748B] block font-medium">Users</span>
-                      <span className="font-extrabold text-[#0F172A] text-sm">{stage.unique_users.toLocaleString()}</span>
+                    <div className="text-right border-l border-slate-800 pl-3">
+                      <span className="text-xs text-[#9CA3AF] block font-medium">Users</span>
+                      <span className="font-extrabold text-[#F8FAFC] text-sm">{stage.unique_users.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>

@@ -41,11 +41,11 @@ export default function FunnelChart({ data }: FunnelChartProps) {
     : 0;
 
   return (
-    <div className="rounded-lg border border-[#E5E7EB] bg-white p-6 shadow-subtle">
+    <div className="rounded-lg border border-slate-800 bg-slate-950 p-6 shadow-subtle">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Funnel</p>
-          <h2 className="mt-1 text-2xl font-bold text-[#1a1a1a]">Conversion Journey</h2>
+          <h2 className="mt-1 text-2xl font-bold text-[#F8FAFC]">Conversion Journey</h2>
         </div>
         <p className="text-sm text-[#9CA3AF]">Live event counts across the primary funnel</p>
       </div>
@@ -61,12 +61,12 @@ export default function FunnelChart({ data }: FunnelChartProps) {
             <div key={stage.key}>
               {/* Stage row with count and conversion % */}
               <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm font-semibold text-[#1a1a1a]">
+                <div className="flex items-center justify-between text-sm font-semibold text-[#F8FAFC]">
                   <span>{stage.label}</span>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-[#1a1a1a]">{stage.value.toLocaleString()}</span>
+                    <span className="text-sm font-medium text-[#F8FAFC]">{stage.value.toLocaleString()}</span>
                     {index > 0 && (
-                      <span title="Conversion from previous step" className="text-xs font-medium text-[#6B7280] bg-[#F3F4F6] px-2 py-1 rounded">
+                      <span title="Conversion from previous step" className="text-xs font-medium text-[#9CA3AF] bg-slate-900 px-2 py-1 rounded">
                         {conversion}%
                       </span>
                     )}
@@ -74,9 +74,9 @@ export default function FunnelChart({ data }: FunnelChartProps) {
                 </div>
 
                 {/* Progress bar */}
-                <div className="h-3 overflow-hidden rounded-full border border-[#D1D5DB] bg-[#F9FAFB]">
+                <div className="h-3 overflow-hidden rounded-full border border-slate-800 bg-slate-900">
                   <div
-                    className="h-full rounded-full bg-[#D1D5DB] transition-all duration-300"
+                    className="h-full rounded-full bg-slate-500 transition-all duration-300"
                     style={{ width: `${Math.max(width, 1)}%` }}
                   />
                 </div>
@@ -95,22 +95,22 @@ export default function FunnelChart({ data }: FunnelChartProps) {
 
       {/* Funnel insights footer */}
       {values[0].value > 0 && (
-        <div className="mt-8 border-t border-[#E5E7EB] pt-6 space-y-3">
+        <div className="mt-8 border-t border-slate-800 pt-6 space-y-3">
           <div className="text-xs font-medium text-[#9CA3AF] uppercase tracking-[0.24em]">Funnel Insights</div>
           <div className="grid gap-4 sm:grid-cols-3">
             {highestDropOffStage && (
-              <div className="rounded-lg bg-[#F9FAFB] p-3">
-                <p className="text-xs text-[#6B7280] mb-1">Highest Drop-off</p>
-                <p className="text-sm font-semibold text-[#1a1a1a]">{highestDropOffStage}</p>
+              <div className="rounded-lg bg-slate-900 border border-slate-800 p-3">
+                <p className="text-xs text-[#9CA3AF] mb-1">Highest Drop-off</p>
+                <p className="text-sm font-semibold text-[#F8FAFC]">{highestDropOffStage}</p>
               </div>
             )}
-            <div className="rounded-lg bg-[#F9FAFB] p-3">
-              <p className="text-xs text-[#6B7280] mb-1">Lost Users</p>
-              <p className="text-sm font-semibold text-[#1a1a1a]">{totalLost}</p>
+            <div className="rounded-lg bg-slate-900 border border-slate-800 p-3">
+              <p className="text-xs text-[#9CA3AF] mb-1">Lost Users</p>
+              <p className="text-sm font-semibold text-[#F8FAFC]">{totalLost}</p>
             </div>
-            <div className="rounded-lg bg-[#F9FAFB] p-3">
-              <p className="text-xs text-[#6B7280] mb-1">Overall Conversion</p>
-              <p className="text-sm font-semibold text-[#1a1a1a]">{overallConversion}%</p>
+            <div className="rounded-lg bg-slate-900 border border-slate-800 p-3">
+              <p className="text-xs text-[#9CA3AF] mb-1">Overall Conversion</p>
+              <p className="text-sm font-semibold text-[#F8FAFC]">{overallConversion}%</p>
             </div>
           </div>
         </div>
