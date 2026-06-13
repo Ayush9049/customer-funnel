@@ -7,7 +7,7 @@ import type {
 } from "../types";
 
 
-const API_BASE_URL =
+export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ??
   import.meta.env.VITE_API_URL ??
   (import.meta.env.DEV ? "" : "https://customer-funnel-production.up.railway.app");
@@ -18,13 +18,28 @@ const API_KEY =
   "demo-key";
 
 async function request<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`);
+  const url = `${API_BASE_URL}${path}`;
+  console.log("Fetching analytics...", url);
+
+  const response = await fetch(url);
+  const text = await response.text();
+
+  console.log("Response:", {
+    url,
+    status: response.status,
+    statusText: response.statusText,
+    body: text,
+  });
 
   if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
+    throw new Error(`API Error: ${response.status} ${response.statusText} - ${text}`);
   }
 
-  return response.json() as Promise<T>;
+  try {
+    return JSON.parse(text) as T;
+  } catch (parseError) {
+    throw new Error(`Failed to parse JSON response from ${url}: ${parseError}`);
+  }
 }
 
 export async function getProjects(): Promise<Project[]> {

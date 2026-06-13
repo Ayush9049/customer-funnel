@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getEvents, getFunnel, getOverview, getProjects, getModularFunnels } from '../services/api';
+import { API_BASE_URL, getEvents, getFunnel, getOverview, getProjects, getModularFunnels } from '../services/api';
 import type { AnalyticsOverview, EventItem, FunnelResponse, Project, ModularFunnelsResponse } from '../types';
 import EventTable from '../components/EventTable';
 import FunnelChart from '../components/FunnelChart';
@@ -38,17 +38,27 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function fetchProjects() {
+      setLoading(true);
+      setError(null);
+
       try {
         const list = await getProjects();
+        console.log('Projects response:', list);
         setProjects(list);
+
         if (list.length > 0) {
           setSelectedProject(list[0]);
+        } else {
+          setError('No projects available.');
+          setLoading(false);
         }
       } catch (e) {
         console.error('Failed to load projects:', e);
+        setError(e instanceof Error ? e.message : 'Failed to load projects.');
+        setLoading(false);
       }
     }
-    fetchProjects();
+    void fetchProjects();
   }, []);
 
   const activeProjectId = selectedProject?.id;
@@ -65,6 +75,8 @@ export default function Dashboard() {
     async function loadData() {
       setLoading(true);
       setError(null);
+      console.log('Fetching analytics for project:', projectId, { page, pageSize, eventName });
+
       try {
         const [overviewData, funnelData, eventsData, modularData] = await Promise.all([
           getOverview(projectId),
@@ -73,19 +85,18 @@ export default function Dashboard() {
           getModularFunnels(projectId),
         ]);
 
+        console.log('Overview response:', overviewData);
+        console.log('Funnel response:', funnelData);
+        console.log('Modular funnels response:', modularData);
+        console.log('Events raw response:', eventsData);
+
         if (!cancelled) {
           setOverview(overviewData);
           setFunnel(funnelData);
           setModularFunnels(modularData);
-          // Temporary debug log to inspect events response shape
-          // Cast to `any` so we can safely inspect non-typed response shapes
-          // eslint-disable-next-line no-console
           const rawEventsData = eventsData as any;
-          console.log('EVENTS RESPONSE', rawEventsData);
 
-          // Support multiple possible response shapes (data/items/results/events)
           const eventsArray = rawEventsData?.data ?? rawEventsData?.items ?? rawEventsData?.results ?? rawEventsData?.events ?? [];
-
           setEvents(eventsArray);
 
           const totalCount =
@@ -95,6 +106,7 @@ export default function Dashboard() {
           setTotalPages(eventsData?.total_pages ?? Math.max(1, Math.ceil(totalCount / pageSize)));
         }
       } catch (fetchError) {
+        console.error('Failed to load analytics data:', fetchError);
         if (!cancelled) {
           setError(fetchError instanceof Error ? fetchError.message : 'Failed to load analytics data');
         }
@@ -167,7 +179,7 @@ export default function Dashboard() {
             <div className="flex flex-col gap-2">
               <span className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Backend endpoint</span>
               <span className="inline-flex rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-2 text-sm text-[#1a1a1a] font-medium">
-                http://localhost:8000
+                {API_BASE_URL || 'http://localhost:8000 (proxy)'}
               </span>
             </div>
           </div>
