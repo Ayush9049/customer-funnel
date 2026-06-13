@@ -28,12 +28,12 @@ SAMPLE_EVENTS = [
 def ensure_live_project(db: Session) -> Project:
     project = db.query(Project).filter(Project.api_key == LIVE_PROJECT_API_KEY).one_or_none()
     if project is None:
-        project = Project(name="Live Project", api_key=LIVE_PROJECT_API_KEY)
+        project = Project(name="GBRU Website", api_key=LIVE_PROJECT_API_KEY)
         db.add(project)
         db.flush()
-        print("Created live project for API key:", LIVE_PROJECT_API_KEY)
+        print("Created GBRU Website project for API key:", LIVE_PROJECT_API_KEY)
     else:
-        print("Live project already exists for API key:", LIVE_PROJECT_API_KEY)
+        print("GBRU Website project already exists for API key:", LIVE_PROJECT_API_KEY)
     return project
 
 

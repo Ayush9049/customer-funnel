@@ -36,6 +36,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [projectsDebugPayload, setProjectsDebugPayload] = useState<unknown>(null);
+  const [lastRefreshTime, setLastRefreshTime] = useState<Date | null>(null);
+  const [isAutoRefreshing, setIsAutoRefreshing] = useState(false);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -83,12 +85,27 @@ export default function Dashboard() {
     let cancelled = false;
     let intervalId: number | null = null;
 
-    async function loadData() {
-      setLoading(true);
+    async function loadData(isAutoRefresh = false) {
+      const isInitialLoad = !isAutoRefresh;
+      
+      if (isInitialLoad) {
+        setLoading(true);
+      } else {
+        console.log('🔄 [AUTO-REFRESH] Refreshing events and analytics...', {
+          projectId,
+          timestamp: new Date().toISOString(),
+          page,
+          eventName,
+          pageSize,
+        });
+        setIsAutoRefreshing(true);
+      }
+      
       setError(null);
-      console.log('Fetching analytics for project:', projectId, { page, pageSize, eventName });
 
       try {
+        const startTime = performance.now();
+        
         const [overviewData, funnelData, eventsData, modularData] = await Promise.all([
           getOverview(projectId),
           getFunnel(projectId),
@@ -96,10 +113,8 @@ export default function Dashboard() {
           getModularFunnels(projectId),
         ]);
 
-        console.log('Overview response:', overviewData);
-        console.log('Funnel response:', funnelData);
-        console.log('Modular funnels response:', modularData);
-        console.log('Events raw response:', eventsData);
+        const endTime = performance.now();
+        const fetchDuration = Math.round(endTime - startTime);
 
         if (!cancelled) {
           setOverview(overviewData);
@@ -115,29 +130,70 @@ export default function Dashboard() {
 
           setTotal(totalCount);
           setTotalPages(eventsData?.total_pages ?? Math.max(1, Math.ceil(totalCount / pageSize)));
+
+          const now = new Date();
+          setLastRefreshTime(now);
+
+          if (isAutoRefresh) {
+            console.log('✅ [AUTO-REFRESH] Events updated successfully', {
+              eventsCount: eventsArray.length,
+              totalEvents: totalCount,
+              fetchDurationMs: fetchDuration,
+              timestamp: now.toISOString(),
+            });
+          } else {
+            console.log('✅ [INITIAL LOAD] Dashboard loaded', {
+              eventsCount: eventsArray.length,
+              totalEvents: totalCount,
+              fetchDurationMs: fetchDuration,
+              timestamp: now.toISOString(),
+            });
+          }
         }
       } catch (fetchError) {
-        console.error('Failed to load analytics data:', fetchError);
+        console.error('❌ [REFRESH ERROR] Failed to load analytics data:', {
+          projectId,
+          isAutoRefresh,
+          error: fetchError instanceof Error ? fetchError.message : String(fetchError),
+          timestamp: new Date().toISOString(),
+        });
+        
         if (!cancelled) {
           setError(fetchError instanceof Error ? fetchError.message : 'Failed to load analytics data');
         }
       } finally {
         if (!cancelled) {
-          setLoading(false);
+          if (isInitialLoad) {
+            setLoading(false);
+          } else {
+            setIsAutoRefreshing(false);
+          }
         }
       }
     }
 
-    loadData();
+    // Initial load
+    loadData(false);
 
+    // Set up auto-refresh interval (every 15 seconds)
     intervalId = window.setInterval(() => {
-      void loadData();
+      void loadData(true);
     }, 15000);
+
+    console.log('📊 [DASHBOARD] Auto-refresh initialized', {
+      projectId,
+      intervalMs: 15000,
+      timestamp: new Date().toISOString(),
+    });
 
     return () => {
       cancelled = true;
       if (intervalId !== null) {
         window.clearInterval(intervalId);
+        console.log('🛑 [DASHBOARD] Auto-refresh cleanup', {
+          projectId,
+          timestamp: new Date().toISOString(),
+        });
       }
     };
   }, [activeProjectId, eventName, page, pageSize]);
@@ -175,6 +231,14 @@ export default function Dashboard() {
           <div className="inline-flex items-center rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-[#F8FAFC] font-medium">
             Last 30 days
           </div>
+          {lastRefreshTime && (
+            <div className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-[#9CA3AF] font-medium">
+              <svg className={`h-3 w-3 ${isAutoRefreshing ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>Updated {lastRefreshTime.toLocaleTimeString()}</span>
+            </div>
+          )}
           </div>
         </div>
 
