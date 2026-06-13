@@ -51,9 +51,14 @@ export default function Dashboard() {
     fetchProjects();
   }, []);
 
-  const activeProjectId = selectedProject?.id || 1;
+  const activeProjectId = selectedProject?.id;
 
   useEffect(() => {
+    if (!activeProjectId) {
+      return;
+    }
+
+    const projectId = activeProjectId;
     let cancelled = false;
     let intervalId: number | null = null;
 
@@ -62,10 +67,10 @@ export default function Dashboard() {
       setError(null);
       try {
         const [overviewData, funnelData, eventsData, modularData] = await Promise.all([
-          getOverview(activeProjectId),
-          getFunnel(activeProjectId),
-          getEvents({ projectId: activeProjectId, page, pageSize, eventName }),
-          getModularFunnels(activeProjectId),
+          getOverview(projectId),
+          getFunnel(projectId),
+          getEvents({ projectId, page, pageSize, eventName }),
+          getModularFunnels(projectId),
         ]);
 
         if (!cancelled) {

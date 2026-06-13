@@ -14,18 +14,28 @@ class Settings(BaseSettings):
         default="postgresql+psycopg2://postgres:postgres@localhost:5432/analytics_platform",
         alias="DATABASE_URL",
     )
-    cors_origins: List[str] = Field(default_factory=lambda: ["http://localhost:5173"], alias="CORS_ORIGINS")
+    cors_origins: List[str] = Field(default_factory=lambda: ["http://localhost:5173", "http://127.0.0.1:5173"], alias="CORS_ORIGINS")
     auto_create_tables: bool = Field(default=True, alias="AUTO_CREATE_TABLES")
 
     @field_validator("cors_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, value: object) -> List[str]:
         if value is None or value == "":
-            return ["http://localhost:5173"]
+            return ["http://localhost:5173", "http://127.0.0.1:5173"]
         if isinstance(value, str):
-            return [origin.strip() for origin in value.split(",") if origin.strip()]
+            parsed = [origin.strip() for origin in value.split(",") if origin.strip()]
+            if "http://localhost:5173" in parsed and "http://127.0.0.1:5173" not in parsed:
+                parsed.append("http://127.0.0.1:5173")
+            if "http://127.0.0.1:5173" in parsed and "http://localhost:5173" not in parsed:
+                parsed.append("http://localhost:5173")
+            return parsed
         if isinstance(value, list):
-            return value
+            parsed = [str(origin).strip() for origin in value if str(origin).strip()]
+            if "http://localhost:5173" in parsed and "http://127.0.0.1:5173" not in parsed:
+                parsed.append("http://127.0.0.1:5173")
+            if "http://127.0.0.1:5173" in parsed and "http://localhost:5173" not in parsed:
+                parsed.append("http://localhost:5173")
+            return parsed
         return [str(value)]
 
 
