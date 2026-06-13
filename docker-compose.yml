@@ -3,15 +3,15 @@ services:
     image: postgres:16-alpine
     environment:
       TZ: "Asia/Kolkata"
-      POSTGRES_DB: analytics_platform
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-analytics_platform}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d analytics_platform"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-analytics_platform}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -19,11 +19,11 @@ services:
   backend:
     build:
       context: ./backend
+    env_file:
+      - ./backend/.env
     environment:
       TZ: "Asia/Kolkata"
-      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/analytics_platform
-      CORS_ORIGINS: http://localhost:5173
-      AUTO_CREATE_TABLES: "true"
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-analytics_platform}
     ports:
       - "8000:8000"
     depends_on:
@@ -34,8 +34,8 @@ services:
   frontend:
     build:
       context: ./frontend
-    environment:
-      VITE_API_BASE_URL: http://localhost:8000
+    env_file:
+      - ./frontend/.env
     ports:
       - "5173:5173"
     depends_on:
