@@ -45,8 +45,11 @@ export default function Dashboard() {
       try {
         const list = await getProjects();
         console.log('Current API Key:', API_KEY);
-        console.log('Projects Response:', list);
-        console.log('Projects Count:', list.length);
+        console.log('API Base URL:', API_BASE_URL);
+        console.log('Projects Response (raw):', list);
+        console.log('Projects Response type:', typeof list, Array.isArray(list));
+        console.log('Projects Count (raw):', (list as any)?.length);
+        console.log('Projects keys:', (list as any)?.map?.((p: any) => ({ id: p.id, api_key: p.api_key })));
         setProjects(list);
         setProjectsDebugPayload(list);
 
@@ -202,7 +205,7 @@ export default function Dashboard() {
         <div className="mb-8 flex border-b border-[#E5E7EB] gap-6">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`pb-3 text-sm font-bold border-b-2 transition-all ${
+            className={`pb-3 text-sm font-bold border-b-2 border-l-0 transition-all ${
               activeTab === 'overview'
                 ? 'border-[#1a1a1a] text-[#1a1a1a]'
                 : 'border-transparent text-[#9CA3AF] hover:text-[#6B7280]'
@@ -212,7 +215,7 @@ export default function Dashboard() {
           </button>
           <button
             onClick={() => setActiveTab('modular')}
-            className={`pb-3 text-sm font-bold border-b-2 transition-all ${
+            className={`pb-3 text-sm font-bold border-b-2 border-l-0 transition-all ${
               activeTab === 'modular'
                 ? 'border-[#1a1a1a] text-[#1a1a1a]'
                 : 'border-transparent text-[#9CA3AF] hover:text-[#6B7280]'

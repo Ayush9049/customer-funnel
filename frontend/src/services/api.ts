@@ -51,7 +51,26 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export async function getProjects(): Promise<Project[]> {
-  return request("/api/projects");
+  const path = "/api/projects";
+  const url = `${API_BASE_URL}${path}`;
+  console.log("getProjects: calling", { url, apiKey: API_KEY, apiBase: API_BASE_URL });
+
+  const response = await fetch(url);
+  const text = await response.text();
+
+  console.log("getProjects: response raw", { url, status: response.status, body: text });
+
+  if (!response.ok) {
+    throw new Error(`API Error: ${response.status} ${response.statusText} - ${text}`);
+  }
+
+  try {
+    const data = JSON.parse(text) as Project[];
+    console.log("getProjects: parsed data", { isArray: Array.isArray(data), length: (data as any)?.length, sample: (data as any)?.slice?.(0,3) });
+    return data;
+  } catch (parseError) {
+    throw new Error(`Failed to parse JSON response from ${url}: ${parseError}`);
+  }
 }
 
 export async function getOverview(
