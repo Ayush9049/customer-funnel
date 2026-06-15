@@ -8,6 +8,7 @@ from app.core.config import settings
 from app.core.database import Base, engine
 from app.models import event, user, project
 from app.utils.seed import seed_live_project_data
+from app.api import auth
 
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
@@ -23,8 +24,7 @@ app.add_middleware(
 app.include_router(events_router)
 app.include_router(analytics_router)
 app.include_router(projects_router)
-
-
+app.include_router(auth.router)
 
 @app.api_route("/", methods=["GET", "HEAD"])
 def root() -> dict[str, str]:
