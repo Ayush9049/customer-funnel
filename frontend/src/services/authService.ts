@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "https://customer-funnel-production.up.railway.app";
 
 export async function login(
   email: string,
