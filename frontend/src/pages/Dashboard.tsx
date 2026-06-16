@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { API_BASE_URL, API_KEY, getEvents, getFunnel, getOverview, getProjects, getModularFunnels } from '../services/api';
 import type { AnalyticsOverview, EventItem, FunnelResponse, Project, ModularFunnelsResponse } from '../types';
 import EventTable from '../components/EventTable';
@@ -38,6 +38,50 @@ export default function Dashboard() {
   const [projectsDebugPayload, setProjectsDebugPayload] = useState<unknown>(null);
   const [lastRefreshTime, setLastRefreshTime] = useState<Date | null>(null);
   const [isAutoRefreshing, setIsAutoRefreshing] = useState(false);
+
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any | null>(null);
+  const profileRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (stored) {
+        setCurrentUser(JSON.parse(stored));
+        return;
+      }
+
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      if (token) {
+        const parts = token.split('.');
+        if (parts.length >= 2) {
+          try {
+            const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+            setCurrentUser(payload || null);
+          } catch (e) {
+            setCurrentUser(null);
+          }
+        }
+      }
+    } catch (err) {
+      setCurrentUser(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      if (!profileRef.current) return;
+      if (!profileRef.current.contains(e.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    }
+
+    if (isProfileOpen) {
+      document.addEventListener('click', onDocClick);
+    }
+
+    return () => document.removeEventListener('click', onDocClick);
+  }, [isProfileOpen]);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -243,6 +287,67 @@ export default function Dashboard() {
                 <span>Updated {lastRefreshTime.toLocaleTimeString()}</span>
               </div>
             )}
+            {/* Profile / User menu */}
+            <div className="relative" ref={profileRef}>
+              <button
+                onClick={() => setIsProfileOpen((s) => !s)}
+                className="inline-flex items-center gap-3 rounded-full border border-[#DDD3C6] bg-[#F8F4ED] px-3 py-2 text-sm text-[#3E362E] font-medium focus:outline-none"
+                aria-haspopup="true"
+                aria-expanded={isProfileOpen}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#EADFCF] text-sm font-semibold text-[#3E362E]">
+                    {currentUser && (currentUser.name || currentUser.full_name || currentUser.first_name)
+                      ? String((currentUser.name || currentUser.full_name || currentUser.first_name)[0]).toUpperCase()
+                      : 'U'}
+                  </div>
+                  <div className="hidden min-w-0 flex-col truncate sm:flex">
+                    <span className="text-sm font-semibold text-[#3E362E] truncate">{currentUser?.name || currentUser?.email || 'User'}</span>
+                    <span className="text-xs text-[#6F665E] truncate">{currentUser?.email || ''}</span>
+                  </div>
+                </div>
+              </button>
+
+              {isProfileOpen && (
+                <div className="absolute right-0 z-50 mt-2 w-64 rounded-xl border border-[#E7DCC9] bg-[#FFFDF9] p-4 shadow-md" role="menu">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EADFCF] text-lg font-bold text-[#3E362E]">
+                      {currentUser && (currentUser.name || currentUser.full_name || currentUser.first_name)
+                        ? String((currentUser.name || currentUser.full_name || currentUser.first_name)[0]).toUpperCase()
+                        : 'U'}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-[#3E362E] truncate">{currentUser?.name || 'Unnamed User'}</div>
+                      <div className="mt-1 text-xs text-[#6F665E] truncate">{currentUser?.email || 'No email'}</div>
+                      <div className="mt-2">
+                        <span className="inline-flex items-center rounded-full bg-[#F1E7D9] px-2.5 py-0.5 text-xs font-semibold text-[#8A6A3E]">{(currentUser?.role || currentUser?.roles || currentUser?.is_admin) ? (currentUser?.role || (currentUser?.is_admin ? 'Admin' : 'User')) : 'User'}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="my-3 h-px bg-[#EDE1D4]" />
+
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => {
+                        try {
+                          localStorage.removeItem('token');
+                          localStorage.removeItem('user');
+                          sessionStorage.removeItem('token');
+                          sessionStorage.removeItem('user');
+                          sessionStorage.clear();
+                        } finally {
+                          window.location.assign('/');
+                        }
+                      }}
+                      className="w-full rounded-lg bg-[#B89B72] px-3 py-2 text-sm font-semibold text-white hover:bg-[#A88A61]"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
