@@ -213,3 +213,16 @@ def me(
         "role": str(current_user.role),
         "is_active": bool(current_user.is_active),
     }
+
+@router.get("/debug-users")
+def debug_users(db: Session = Depends(get_db)):
+    users = db.query(AuthUser).all()
+
+    return [
+        {
+            "email": user.email,
+            "role": user.role,
+            "active": user.is_active,
+        }
+        for user in users
+    ]
