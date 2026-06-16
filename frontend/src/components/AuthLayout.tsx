@@ -6,61 +6,61 @@ type Props = {
 
 export default function AuthLayout({ children }: Props) {
   return (
-    <div className="min-h-screen flex bg-[#020817] text-white">
-      <div className="hidden md:flex w-1/2 p-12 flex-col justify-center gap-8 bg-gradient-to-b from-[#020817] to-[#020817]">
-        <div className="max-w-md">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-lg bg-[#071126] flex items-center justify-center border border-[#1e293b]">
+    <div className="min-h-screen flex flex-col md:flex-row bg-[#F5F1EA] text-[#3E362E]">
+      <div className="hidden md:flex w-1/2 p-12 flex-col justify-center gap-10 bg-[#EAE3D9]">
+        <div className="max-w-lg">
+          <div className="inline-flex items-center gap-4 rounded-3xl bg-[#FFFDF9] border border-[#DDD3C6] px-4 py-3 shadow-soft">
+            <div className="w-12 h-12 rounded-3xl bg-[#B89B72] flex items-center justify-center text-white">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 12h18" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M3 6h18" stroke="#94a3b8" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M3 12h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M3 6h18" stroke="rgba(255,255,255,0.7)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div>
               <h1 className="text-2xl font-semibold">Funnel Analytics</h1>
-              <p className="text-sm text-[#94a3b8]">Track customer journeys. Measure conversions.</p>
+              <p className="text-sm text-[#6F665E]">Track customer journeys. Measure conversions.</p>
             </div>
           </div>
 
-          <h2 className="text-3xl font-semibold mb-4">Understand your funnel</h2>
-          <p className="text-[#94a3b8] mb-6">Measure drop-offs and optimize revenue with enterprise-grade analytics built for product teams.</p>
+          <h2 className="text-3xl font-semibold mb-4 text-[#3E362E]">Understand your funnel</h2>
+          <p className="text-[#6F665E] mb-6">Measure drop-offs and optimize revenue with enterprise-grade analytics built for product teams.</p>
 
-          <ul className="space-y-3 text-sm">
+          <ul className="space-y-4 text-sm">
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#2563eb] mt-2" />
-              <span className="text-[#94a3b8]">Event-level analytics with flexible segmentation</span>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#B89B72] mt-2" />
+              <span className="text-[#6F665E]">Event-level analytics with flexible segmentation</span>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#2563eb] mt-2" />
-              <span className="text-[#94a3b8]">Real-time funnel reporting</span>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#B89B72] mt-2" />
+              <span className="text-[#6F665E]">Real-time funnel reporting</span>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#2563eb] mt-2" />
-              <span className="text-[#94a3b8]">Secure role-based access</span>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#B89B72] mt-2" />
+              <span className="text-[#6F665E]">Secure role-based access</span>
             </li>
           </ul>
         </div>
 
-        <div className="mt-auto flex items-center gap-4 text-sm text-[#94a3b8]">
-          <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-60">
-            <rect x="2" y="8" width="60" height="40" rx="6" stroke="#1e293b" strokeWidth="1.5" fill="#071126" />
-            <path d="M8 40L22 24L36 32L48 16" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <div className="mt-auto flex items-center gap-4 text-sm text-[#6F665E]">
+          <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-80">
+            <rect x="2" y="8" width="60" height="40" rx="6" stroke="#DDD3C6" strokeWidth="1.5" fill="#FFFDF9" />
+            <path d="M8 40L22 24L36 32L48 16" stroke="#B89B72" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <div>
-            <div className="text-sm">Funnel Analytics</div>
-            <div className="text-xs text-[#94a3b8]">Analytics platform for growth teams</div>
+            <div className="text-sm font-semibold text-[#3E362E]">Funnel Analytics</div>
+            <div className="text-xs text-[#6F665E]">Analytics platform for growth teams</div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-6">
+      <div className="flex-1 flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md">
-          <div className="bg-[#071126] border border-[#1e293b] rounded-xl shadow-md p-8">
+          <div className="bg-[#FFFDF9] border border-[#DDD3C6] rounded-[32px] shadow-soft p-8 ring-1 ring-[#DDD3C6]/70">
             {children}
           </div>
 
-          <div className="mt-6 text-center text-sm text-[#94a3b8]">
-            Don't have an account? <span className="text-[#2563eb]">Contact Administrator</span>
+          <div className="mt-6 text-center text-sm text-[#6F665E]">
+            Don't have an account? <span className="font-semibold text-[#B89B72]">Contact Administrator</span>
           </div>
         </div>
       </div>

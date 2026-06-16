@@ -16,9 +16,10 @@ export default function StatsCards({ overview }: StatsCardsProps) {
       {items.map((item) => {
         const value = overview?.[item.key as keyof AnalyticsOverview] ?? 0;
         return (
-          <div key={item.label} className="rounded-lg border border-slate-800 bg-slate-950 p-5 shadow-subtle hover:shadow-md transition-shadow">
-            <p className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">{item.label}</p>
-            <p className="mt-4 text-3xl font-bold text-[#F8FAFC]">{value.toLocaleString()}</p>
+          <div key={item.label} className="rounded-[28px] border border-[#DDD3C6] bg-[#FFFDF9] p-6 shadow-soft hover:shadow-md transition-shadow">
+            <p className="text-[11px] uppercase tracking-[0.24em] text-[#6F665E] font-medium">{item.label}</p>
+            <p className="mt-4 text-3xl font-bold text-[#3E362E]">{value.toLocaleString()}</p>
+            {item.change ? <span className="mt-2 inline-flex text-sm text-[#7A9E7E] font-semibold">{item.change}</span> : null}
           </div>
         );
       })}

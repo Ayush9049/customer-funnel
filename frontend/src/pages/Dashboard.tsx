@@ -200,89 +200,91 @@ export default function Dashboard() {
 
 
   return (
-    <main className="min-h-screen bg-[#000000]">
+    <main className="min-h-screen bg-[#F5F1EA] text-[#3E362E]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8 rounded-lg border border-slate-800 bg-slate-950 px-5 py-4 shadow-subtle flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+        <div className="mb-8 rounded-[32px] border border-[#DDD3C6] bg-[#FFFDF9] px-5 py-5 shadow-soft flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-center gap-4">
             <img src={logoImage} alt="Funnel Analytics logo" className="h-16 w-16 object-contain" />
-            <span className="text-sm font-bold text-[#F8FAFC]">Funnel Analytics</span>
-          </div>
-          <div className="flex items-center gap-3">
-          {projects.length > 0 && (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-[#6B7280] font-bold uppercase tracking-wider">Project:</span>
-              <select
-                value={selectedProject?.id ?? ''}
-                onChange={(e) => {
-                  const id = Number(e.target.value);
-                  const proj = projects.find((p) => p.id === id);
-                  if (proj) setSelectedProject(proj);
-                }}
-                className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-[#F8FAFC] font-bold outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-500/20 cursor-pointer"
-              >
-                {projects.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
+            <div>
+              <p className="text-sm font-bold text-[#3E362E]">Funnel Analytics</p>
+              <p className="text-sm text-[#6F665E]">Performance dashboard for customer funnels</p>
             </div>
-          )}
-          <div className="inline-flex items-center rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-[#F8FAFC] font-medium">
-            Last 30 days
           </div>
-          {lastRefreshTime && (
-            <div className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-[#9CA3AF] font-medium">
-              <svg className={`h-3 w-3 ${isAutoRefreshing ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <span>Updated {lastRefreshTime.toLocaleTimeString()}</span>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            {projects.length > 0 && (
+              <div className="flex items-center gap-3 rounded-3xl border border-[#DDD3C6] bg-[#F8F4ED] px-4 py-3">
+                <span className="text-xs text-[#6F665E] font-semibold uppercase tracking-[0.24em]">Project</span>
+                <select
+                  value={selectedProject?.id ?? ''}
+                  onChange={(e) => {
+                    const id = Number(e.target.value);
+                    const proj = projects.find((p) => p.id === id);
+                    if (proj) setSelectedProject(proj);
+                  }}
+                  className="rounded-full border border-transparent bg-transparent px-2 py-2 text-sm font-semibold text-[#3E362E] outline-none focus:border-[#B89B72] focus:ring-2 focus:ring-[#B89B72]/20 cursor-pointer"
+                >
+                  {projects.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <div className="inline-flex items-center rounded-3xl border border-[#DDD3C6] bg-[#F8F4ED] px-4 py-3 text-sm text-[#6F665E] font-semibold">
+              Last 30 days
             </div>
-          )}
+            {lastRefreshTime && (
+              <div className="inline-flex items-center gap-2 rounded-3xl border border-[#DDD3C6] bg-[#F8F4ED] px-4 py-3 text-sm text-[#6F665E] font-medium">
+                <svg className={`h-4 w-4 ${isAutoRefreshing ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Updated {lastRefreshTime.toLocaleTimeString()}</span>
+              </div>
+            )}
           </div>
         </div>
 
-        <section className="mb-8 rounded-lg border border-slate-800 bg-slate-950 px-6 py-6 shadow-subtle">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+        <section className="mb-8 rounded-[32px] border border-[#DDD3C6] bg-[#FFFDF9] px-6 py-7 shadow-soft">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-2xl">
-              <h1 className="text-3xl font-bold tracking-tight text-[#F8FAFC]">Funnel Analytics</h1>
-              <p className="mt-3 text-sm leading-6 text-[#9CA3AF]">
-                Track login-to-purchase behavior, inspect individual events, and surface a concise dashboard for the
-                product funnel.
+              <h1 className="text-3xl font-bold tracking-tight text-[#3E362E]">Funnel Analytics</h1>
+              <p className="mt-3 text-sm leading-7 text-[#6F665E]">
+                Track login-to-purchase behavior, inspect individual events, and surface a concise dashboard for the product funnel.
               </p>
             </div>
             <div className="flex flex-col gap-2">
-              <span className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Backend endpoint</span>
-              <span className="inline-flex rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-[#F8FAFC] font-medium">
+              <span className="text-[11px] uppercase tracking-[0.24em] text-[#6F665E] font-medium">Backend endpoint</span>
+              <span className="inline-flex rounded-3xl border border-[#DDD3C6] bg-[#F8F4ED] px-4 py-3 text-sm text-[#3E362E] font-medium">
                 {API_BASE_URL || 'http://localhost:8000 (proxy)'}
               </span>
             </div>
           </div>
         </section>
         {error ? (
-          <div className="mb-6 rounded-lg border border-[#FCA5A5] bg-[#FEE2E2] px-4 py-3 text-sm text-[#991B1B] font-medium">
+          <div className="mb-6 rounded-[28px] border border-[#F0D7D2] bg-[#FBEFEA] px-4 py-4 text-sm text-[#8A4236] font-medium">
             {error}
           </div>
         ) : null}
 
-        {/* Tab switcher */}
-        <div className="mb-8 flex border-b border-slate-800 gap-6">
+        <div className="mb-8 flex gap-4 rounded-full border border-[#DDD3C6] bg-[#F8F4ED] px-3 py-2">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`pb-3 text-sm font-bold border-b-2 border-l-0 transition-all ${
+            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
               activeTab === 'overview'
-                ? 'border-[#F8FAFC] text-[#F8FAFC]'
-                : 'border-transparent text-[#9CA3AF] hover:text-[#D1D5DB]'
+                ? 'bg-[#B89B72] text-white shadow-button'
+                : 'text-[#6F665E] hover:text-[#3E362E]'
             }`}
           >
             Overview Dashboard
           </button>
           <button
             onClick={() => setActiveTab('modular')}
-            className={`pb-3 text-sm font-bold border-b-2 border-l-0 transition-all ${
+            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
               activeTab === 'modular'
-                ? 'border-[#F8FAFC] text-[#F8FAFC]'
-                : 'border-transparent text-[#9CA3AF] hover:text-[#D1D5DB]'
+                ? 'bg-[#B89B72] text-white shadow-button'
+                : 'text-[#6F665E] hover:text-[#3E362E]'
             }`}
           >
             Categorized Funnels
@@ -290,7 +292,7 @@ export default function Dashboard() {
         </div>
 
         {loading ? (
-          <div className="rounded-lg border border-slate-800 bg-slate-950 px-6 py-10 text-center text-[#F8FAFC] shadow-subtle font-medium">
+          <div className="rounded-[32px] border border-[#DDD3C6] bg-[#FFFDF9] px-6 py-10 text-center text-[#3E362E] shadow-soft font-medium">
             Loading analytics dashboard...
           </div>
         ) : (
@@ -300,32 +302,32 @@ export default function Dashboard() {
                 <StatsCards overview={overview} />
                 <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr] mb-8">
                   <FunnelChart data={funnel} />
-                  <div className="rounded-lg border border-slate-800 bg-slate-950 p-6 shadow-subtle">
-                    <div className="flex flex-col gap-3">
+                  <div className="rounded-[32px] border border-[#DDD3C6] bg-[#FFFDF9] p-6 shadow-soft">
+                    <div className="flex flex-col gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.24em] text-[#9CA3AF] font-medium">Live Feed</p>
-                        <h2 className="mt-1 text-xl font-bold text-[#F8FAFC]">Recent Activity</h2>
+                        <p className="text-[11px] uppercase tracking-[0.24em] text-[#6F665E] font-medium">Live Feed</p>
+                        <h2 className="mt-1 text-xl font-bold text-[#3E362E]">Recent Activity</h2>
                       </div>
-                      <div className="divide-y divide-slate-800">
+                      <div className="divide-y divide-[#E2D8CD]">
                         {(overview?.recent_events ?? []).map((event) => {
                           const style = getEventStyle(event.event_name);
                           return (
-                            <div key={event.id} className={`flex items-center gap-3 border-l-4 ${style} py-4 pl-4`}>
+                            <div key={event.id} className={`flex items-center gap-3 border-l-4 ${style} py-4 pl-4 bg-[#FFFDF9]`}> 
                               <span className={`inline-flex h-2.5 w-2.5 rounded-full ${style}`} />
                               <div className="min-w-0">
-                                <p className="text-sm font-bold text-[#F8FAFC]">{formatEventName(event.event_name)}</p>
+                                <p className="text-sm font-semibold text-[#3E362E]">{formatEventName(event.event_name)}</p>
                                 <div className="customer-info mt-1">
-                                  <div className="customer-name text-sm text-[#F8FAFC] font-medium truncate">
+                                  <div className="customer-name text-sm text-[#6F665E] font-medium truncate">
                                     {event.properties?.customer_name || event.properties?.customer_email || event.user_id || event.anonymous_id || 'Anonymous user'}
                                   </div>
                                   {event.user_id && (
-                                    <div className="customer-phone text-xs text-[#9CA3AF] mt-0.5">
+                                    <div className="customer-phone text-xs text-[#9B8F7E] mt-0.5">
                                       {event.user_id}
                                     </div>
                                   )}
                                 </div>
                               </div>
-                              <p className="ml-auto text-xs text-[#9CA3AF]">{formatToIST(event.created_at)}</p>
+                              <p className="ml-auto text-xs text-[#9B8F7E]">{formatToIST(event.created_at)}</p>
                             </div>
                           );
                         })}
@@ -345,7 +347,7 @@ export default function Dashboard() {
                     <ModularFunnelWidget data={modularFunnels.orders} />
                   </div>
                 ) : (
-                  <div className="rounded-lg border border-slate-800 bg-slate-950 px-6 py-10 text-center text-[#F8FAFC] shadow-subtle font-medium mb-8">
+                  <div className="rounded-[32px] border border-[#DDD3C6] bg-[#FFFDF9] px-6 py-10 text-center text-[#3E362E] shadow-soft font-medium mb-8">
                     No modular funnels data available.
                   </div>
                 )}
