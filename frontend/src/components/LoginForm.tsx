@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+const API_BASE =
+  "https://customer-funnel-production.up.railway.app";
 
 type LoginResponse = {
   access_token: string;
@@ -37,54 +39,80 @@ export default function LoginForm() {
     return ok;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!validate()) return;
-    setLoading(true);
-    setError(null);
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+
+  if (!validate()) return;
+
+  setLoading(true);
+  setError(null);
+
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        setError("Invalid email or password");
+      } else {
+        setError("Server error. Please try again later.");
+      }
+
+      setLoading(false);
+      return;
+    }
+
+    const data = (await res.json()) as LoginResponse;
+    const token = data.access_token;
+
+    if (remember) {
+      localStorage.setItem("token", token);
+    } else {
+      sessionStorage.setItem("token", token);
+    }
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          setError("Invalid email or password");
-        } else {
-          setError("Server error. Please try again later.");
+      const me = await fetch(
+        `${API_BASE}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-        setLoading(false);
-        return;
+      );
+
+      if (me.ok) {
+        const user = await me.json();
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(user)
+        );
       }
-
-      const data = (await res.json()) as LoginResponse;
-      const token = data.access_token;
-
-      try {
-        if (remember) localStorage.setItem("token", token);
-        else sessionStorage.setItem("token", token);
-
-        const me = await fetch("/api/auth/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (me.ok) {
-          const user = await me.json();
-          localStorage.setItem("user", JSON.stringify(user));
-        }
-      } catch (err) {
-        // ignore me fetch failure but proceed to dashboard
-      }
-
-      window.location.assign("/dashboard");
     } catch (err) {
-      setError("Network error. Please check your connection.");
-      setLoading(false);
+      console.error(err);
     }
+
+    window.location.assign("/dashboard");
+  } catch (err) {
+    setError(
+      "Network error. Please check your connection."
+    );
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" aria-label="login form">
