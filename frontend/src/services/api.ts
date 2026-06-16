@@ -6,32 +6,46 @@ import type {
   ModularFunnelsResponse,
 } from "../types";
 
-
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ??
   import.meta.env.VITE_API_URL ??
-  (import.meta.env.DEV ? "" : "https://customer-funnel-production.up.railway.app");
+  (import.meta.env.DEV
+    ? ""
+    : "https://customer-funnel-production.up.railway.app");
 
 export const API_KEY =
   import.meta.env.VITE_ANALYTICS_API_KEY ??
   import.meta.env.VITE_API_KEY ??
   "pk_live_bcd39b8924457c7be39983e0117dd57f";
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+async function request<T>(
+  path: string,
+  options: RequestInit = {}
+): Promise<T> {
   const url = `${API_BASE_URL}${path}`;
   const method = options.method ?? "GET";
-  console.log("Current API Key:", API_KEY);
-  console.log("Fetching analytics request:", {
-    url,
-    method,
-    payload: options.body ?? null,
-    apiKey: API_KEY,
+
+  const token =
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
+
+  console.log("JWT Token:", token);
+
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      ...(token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : {}),
+    },
   });
 
-  const response = await fetch(url, options);
   const text = await response.text();
 
-  console.log("Analytics response:", {
+  console.log("API Response:", {
     url,
     method,
     status: response.status,
@@ -40,57 +54,47 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   });
 
   if (!response.ok) {
-    throw new Error(`API Error: ${response.status} ${response.statusText} - ${text}`);
+    throw new Error(
+      `API Error: ${response.status} ${response.statusText} - ${text}`
+    );
   }
 
   try {
     return JSON.parse(text) as T;
   } catch (parseError) {
-    throw new Error(`Failed to parse JSON response from ${url}: ${parseError}`);
+    throw new Error(
+      `Failed to parse JSON response from ${url}: ${parseError}`
+    );
   }
 }
 
 export async function getProjects(): Promise<Project[]> {
-  const path = "/api/projects";
-  const url = `${API_BASE_URL}${path}`;
-  console.log("getProjects: calling", { url, apiKey: API_KEY, apiBase: API_BASE_URL });
-
-  const response = await fetch(url);
-  const text = await response.text();
-
-  console.log("getProjects: response raw", { url, status: response.status, body: text });
-
-  if (!response.ok) {
-    throw new Error(`API Error: ${response.status} ${response.statusText} - ${text}`);
-  }
-
-  try {
-    const data = JSON.parse(text) as Project[];
-    console.log("getProjects: parsed data", { isArray: Array.isArray(data), length: (data as any)?.length, sample: (data as any)?.slice?.(0,3) });
-    return data;
-  } catch (parseError) {
-    throw new Error(`Failed to parse JSON response from ${url}: ${parseError}`);
-  }
+  return request<Project[]>("/api/projects");
 }
 
 export async function getOverview(
   projectId: number
 ): Promise<AnalyticsOverview> {
-  return request(`/api/analytics/overview?project_id=${projectId}`);
+  return request<AnalyticsOverview>(
+    `/api/analytics/overview?project_id=${projectId}`
+  );
 }
 
 export async function getFunnel(
   projectId: number
 ): Promise<FunnelResponse> {
-  return request(`/api/analytics/funnel?project_id=${projectId}`);
+  return request<FunnelResponse>(
+    `/api/analytics/funnel?project_id=${projectId}`
+  );
 }
 
 export async function getModularFunnels(
   projectId: number
 ): Promise<ModularFunnelsResponse> {
-  return request(`/api/analytics/modular-funnels?project_id=${projectId}`);
+  return request<ModularFunnelsResponse>(
+    `/api/analytics/modular-funnels?project_id=${projectId}`
+  );
 }
-
 
 export async function getEvents(params: {
   projectId: number;
@@ -108,7 +112,9 @@ export async function getEvents(params: {
     search.set("event_name", params.eventName);
   }
 
-  return request(`/api/events?${search.toString()}`);
+  return request<EventListResponse>(
+    `/api/events?${search.toString()}`
+  );
 }
 
 export async function trackEvent(payload: {
@@ -144,8 +150,6 @@ export async function trackEvent(payload: {
 
   const eventName = payload.event_name.trim();
 
-  try {
-    const url = `${API_BASE_URL}/api/events/track`;
   const payloadWithKey = {
     api_key: API_KEY,
     user_id: payload.user_id ?? null,
@@ -154,19 +158,22 @@ export async function trackEvent(payload: {
     properties: payload.properties ?? {},
   };
 
-  console.log("Track event request:", {
-    url,
-    payload: payloadWithKey,
-    apiKey: API_KEY,
-  });
+  try {
+    const url = `${API_BASE_URL}/api/events/track`;
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payloadWithKey),
-  });
+    console.log("Track event request:", {
+      url,
+      payload: payloadWithKey,
+      apiKey: API_KEY,
+    });
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payloadWithKey),
+    });
 
     if (!response.ok) {
       throw new Error(
