@@ -214,15 +214,48 @@ def me(
         "is_active": bool(current_user.is_active),
     }
 
-@router.get("/debug-users")
-def debug_users(db: Session = Depends(get_db)):
-    users = db.query(AuthUser).all()
+# @router.get("/debug-users")
+# def debug_users(db: Session = Depends(get_db)):
+#     users = db.query(AuthUser).all()
 
-    return [
-        {
-            "email": user.email,
-            "role": user.role,
-            "active": user.is_active,
+#     return [
+#         {
+#             "email": user.email,
+#             "role": user.role,
+#             "active": user.is_active,
+#         }
+#         for user in users
+#     ]
+
+
+@router.get("/create-admin")
+def create_admin(
+    db: Session = Depends(get_db),
+):
+    existing_user = (
+        db.query(AuthUser)
+        .filter(AuthUser.email == "ayush@test.com")
+        .first()
+    )
+
+    if existing_user:
+        return {
+            "message": "Admin already exists"
         }
-        for user in users
-    ]
+
+    user = AuthUser(
+        id=str(uuid4()),
+        name="Ayush",
+        email="ayush@test.com",
+        password_hash=hash_password("Admin@123"),
+        role="admin",
+        is_active=True,
+        created_at=datetime.now(UTC),
+    )
+
+    db.add(user)
+    db.commit()
+
+    return {
+        "message": "Admin created successfully"
+    }
