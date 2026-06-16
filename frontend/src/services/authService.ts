@@ -1,9 +1,10 @@
 const API_BASE = "https://customer-funnel-production.up.railway.app";
-
+console.log("AUTH SERVICE LOADED");
 export async function login(
   email: string,
   password: string
-) {
+)
+ {
   const response = await fetch(
     `${API_BASE}/api/auth/login`,
     {
