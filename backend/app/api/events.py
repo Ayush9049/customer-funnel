@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.auth import get_current_user
+from app.models.auth_user import AuthUser
 from app.schemas.event import EventListResponse, EventRead, EventTrackRequest
 from app.services.event_service import EventService
 
