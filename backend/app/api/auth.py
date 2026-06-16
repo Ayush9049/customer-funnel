@@ -213,25 +213,3 @@ def me(
         "role": str(current_user.role),
         "is_active": bool(current_user.is_active),
     }
-
-@router.get("/create-admin")
-def create_admin(db: Session = Depends(get_db)):
-    from uuid import uuid4
-    from datetime import datetime, UTC
-    from app.services.security import hash_password
-    from app.models.auth_user import AuthUser
-
-    user = AuthUser(
-        id=str(uuid4()),
-        name="Ayush",
-        email="ayush@test.com",
-        password_hash=hash_password("Admin@123"),
-        role="admin",
-        is_active=True,
-        created_at=datetime.now(UTC),
-    )
-
-    db.add(user)
-    db.commit()
-
-    return {"message": "admin created"}
