@@ -257,26 +257,33 @@ export default function Dashboard() {
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
             {projects.length > 0 && (
-              <div className="flex items-center gap-3 rounded-3xl border border-[#DDD3C6] bg-[#F8F4ED] px-4 py-3">
+              <div className="relative flex items-center gap-3 rounded-[12px] border border-[#DDD3C6] bg-[#FFFDF9] px-4 py-3 shadow-soft">
                 <span className="text-xs text-[#6F665E] font-semibold uppercase tracking-[0.24em]">Project</span>
-                <select
-                  value={selectedProject?.id ?? ''}
-                  onChange={(e) => {
-                    const id = Number(e.target.value);
-                    const proj = projects.find((p) => p.id === id);
-                    if (proj) setSelectedProject(proj);
-                  }}
-                  className="rounded-full border border-transparent bg-transparent px-2 py-2 text-sm font-semibold text-[#3E362E] outline-none focus:border-[#B89B72] focus:ring-2 focus:ring-[#B89B72]/20 cursor-pointer"
-                >
-                  {projects.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative min-w-[180px]">
+                  <select
+                    value={selectedProject?.id ?? ''}
+                    onChange={(e) => {
+                      const id = Number(e.target.value);
+                      const proj = projects.find((p) => p.id === id);
+                      if (proj) setSelectedProject(proj);
+                    }}
+                    className="w-full appearance-none rounded-[12px] border border-[#DDD3C6] bg-[#FFFDF9] px-4 py-2 text-sm font-semibold text-[#3E362E] outline-none transition duration-200 ease-in-out focus:border-[#B89B72] focus:ring-2 focus:ring-[#B89B72]/20"
+                  >
+                    {projects.map((p) => (
+                      <option key={p.id} value={p.id} className="bg-[#FFFDF9] text-[#3E362E]">
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[#6F665E]">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             )}
-            <div className="inline-flex items-center rounded-3xl border border-[#DDD3C6] bg-[#F8F4ED] px-4 py-3 text-sm text-[#6F665E] font-semibold">
+            <div className="inline-flex items-center rounded-[12px] border border-[#DDD3C6] bg-[#FFFDF9] px-4 py-3 text-sm text-[#6F665E] font-semibold shadow-soft">
               Last 30 days
             </div>
             {lastRefreshTime && (
